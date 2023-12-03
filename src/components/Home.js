@@ -1,7 +1,8 @@
-import React from 'react';
-import { Container, Button, Navbar, Nav, Form, Image } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './Home.css';
+const React = require('react');
+const { Container, Button, Navbar, Nav, Form, Image } = require('react-bootstrap');
+require('bootstrap/dist/css/bootstrap.min.css');
+require('./Home.css');
+
 
 const Home = () => {
   const handleAddFarm = () => {

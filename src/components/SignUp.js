@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './SignUp.css';
+const React = require('react');
+const { useState } = require('react');
+const { Container, Row, Col, Form, Button } = require('react-bootstrap');
+const { Link } = require('react-router-dom');
+require('bootstrap/dist/css/bootstrap.min.css');
+require('./SignUp.css');
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -11,8 +12,31 @@ const SignUp = () => {
   const [reEnterPassword, setReEnterPassword] = useState('');
 
   const handleSignUp = () => {
-    // Implement logic
-    console.log('Sign Up clicked with:', { username, email, password, reEnterPassword });
+    // Create an object with user data
+    const userData = {
+      username,
+      email,
+      password,
+      reEnterPassword,
+    };
+
+    // Make an HTTP POST request to your backend
+    fetch('http://localhost:3002/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Registration successful:', data);
+        // Optionally, you can redirect the user or perform other actions upon successful registration.
+      })
+      .catch(error => {
+        console.error('Error during registration:', error);
+        // Handle errors or display error messages to the user.
+      });
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './SignIn.css';
 
@@ -8,10 +8,37 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // useNavigate replaces useHistory in v6
 
-  const handleSignin = () => {
-    // Implement logic
-    console.log('Login clicked with:', { email, password, rememberMe });
+  const handleSignin = async () => {
+    try {
+      setError(null);
+
+      if (!email || !password) {
+        setError('Please enter both email and password.');
+        return;
+      }
+
+      const response = await fetch('http://localhost:3002/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        console.log('Login successful!');
+        // Use the navigate function to navigate to the home page
+        navigate('/home');
+      } else {
+        setError('Login failed. Please check your email and password.');
+      }
+    } catch (error) {
+      console.error('An error occurred during sign-in:', error);
+      setError('An unexpected error occurred. Please try again later.');
+    }
   };
 
   return (
@@ -52,13 +79,12 @@ const SignIn = () => {
                 <Form.Label className="ms-2">Remember me</Form.Label>
               </InputGroup>
             </Form.Group>
-            <Link to="/home" className="no-underline">
+            {error && <p className="text-danger">{error}</p>}
             <div className="d-grid gap-2">
               <Button variant="success" onClick={handleSignin}>
                 SIGN IN
               </Button>
             </div>
-            </Link>
             <p className="mt-3">
               You do not have an account?{' '}
               <Link to="/signup" className="text-success text-decoration-underline">

@@ -1,10 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import AppRouter from './AppRouter';
+import AppRouter from './components/AppRouter';
+const React = require('react');
+const ReactDOM = require('react-dom/client');
+require('./index.css');
 
 // Importing the Bootstrap CSS
-import 'bootstrap/dist/css/bootstrap.min.css';
+require('bootstrap/dist/css/bootstrap.min.css');
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
