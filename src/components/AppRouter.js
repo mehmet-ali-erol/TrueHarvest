@@ -1,7 +1,8 @@
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Home from './Home';
-import Map from './Map'
+import Map from './Map';
+import Farm from './Farm'
 const React = require('react');
 const { useEffect, useState } = require('react');
 const { Routes, Route, Navigate } = require('react-router-dom');
@@ -21,6 +22,7 @@ export default function AppRouter() {
       <Route path="/signup" element={<SignUp/>} />
       <Route path="/home" element={<Home/>} />
       <Route path="/map" element={<Map/>} />
+      <Route path="/farm" element={<Farm/>} />
     </Routes>
   );
 }

@@ -1,15 +1,15 @@
-h1 {
+.signup-container h1 {
     font-size: 70px;
     -webkit-text-stroke: 0.2px black;
     padding-top: 100px;
 }
 
-h2 {
+.signup-container h2 {
     font-size: 30px;
     -webkit-text-stroke: 0.1px black;
 }
 
-p {
+.signup-container p {
     text-align: center;
 }
 
@@ -36,7 +36,7 @@ p {
     margin-top: 10px;
 }
 
-.form-control {
+.signup-container .form-control {
     height: 50px;
     background-color: #2B2B2C;
     color: lightgray;

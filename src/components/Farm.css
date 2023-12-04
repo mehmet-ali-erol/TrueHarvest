@@ -1,0 +1,26 @@
+.main-container{
+    padding: 70px;
+    
+}
+.main-container button {
+    width: 120px;
+    height: 50px;
+    background: lightgray;
+    margin-right: 10px;
+    float: right;
+}
+
+.main-container .form-control {
+    height: 50px;
+    background: whitesmoke;
+    color: gray;
+}
+
+.map-container{
+    border-style: solid;
+    border-radius: 25px;
+    height: 300px;
+}
+.main-container h2{
+    text-align: center;
+}
