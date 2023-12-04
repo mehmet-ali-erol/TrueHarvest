@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const farmSchema = new mongoose.Schema({
-    farmowner: {
+    farmowneremail: {
         required: true,
         type: String,
       },

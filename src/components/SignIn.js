@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from './UserContext'; // Update the path accordingly
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './SignIn.css';
 
@@ -10,6 +11,7 @@ const SignIn = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); // useNavigate replaces useHistory in v6
+  const { setUser } = useUser(); // Use the useUser hook at the top level
 
   const handleSignin = async () => {
     try {
@@ -30,8 +32,9 @@ const SignIn = () => {
 
       if (response.ok) {
         console.log('Login successful!');
+        setUser(email);
         // Use the navigate function to navigate to the home page
-        navigate('/home');
+        navigate('/map');
       } else {
         setError('Login failed. Please check your email and password.');
       }

@@ -1,16 +1,19 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { UserProvider } from './components/UserContext';
 import AppRouter from './components/AppRouter';
-const React = require('react');
-const ReactDOM = require('react-dom/client');
-require('./index.css');
-
-// Importing the Bootstrap CSS
-require('bootstrap/dist/css/bootstrap.min.css');
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <AppRouter />
-  </React.StrictMode>
-);
 
+root.render(
+  <UserProvider>
+    <React.StrictMode>
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
+    </React.StrictMode>
+  </UserProvider>
+);
