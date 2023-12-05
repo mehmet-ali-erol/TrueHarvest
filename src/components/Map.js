@@ -1,6 +1,5 @@
-import { useUser } from './UserContext'; 
+import { useUser} from './UserContext'; 
 import { polygon as turfPolygon, intersect as turfIntersect } from '@turf/turf';
-import { point as turfPoint } from '@turf/turf';
 const booleanPointInPolygon = require('@turf/turf').booleanPointInPolygon;
 const React = require('react');
 const { useEffect } = require('react');
@@ -16,16 +15,23 @@ const Map = () => {
   const { userEmail } = useUser();
   const drawnItems = new L.FeatureGroup();
   const [loading, setLoading] = useState(true);
+  const { setSelectedFarm } = useUser();
+
   let fetchedFarms;
+  let fetchedFarmsCoordiantes;
+  let fetchedFarmsIDs;
+  console.log(userEmail);
 
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
       fetchedFarms = response.data;
-      console.log(fetchedFarms);
+      fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
+      fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
 
       // Save to localStorage
-      sessionStorage.setItem('farms', JSON.stringify(fetchedFarms));
+      sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
+      sessionStorage.setItem('farmids', JSON.stringify(fetchedFarmsIDs));
       setLoading(false);
       console.log("false1");
     } catch (error) {
@@ -35,13 +41,22 @@ const Map = () => {
     }
   };
 
+  useEffect(() => {
+    window.onbeforeunload = () => sessionStorage.clear();
+  
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, []);
 
   useEffect(() => {
     console.log('Running useEffect');
     const localFarms = sessionStorage.getItem('farms');
+    const localIDs = sessionStorage.getItem('farmids');
     if (localFarms && JSON.parse(localFarms).length > 0) {
       // If farms exist in localStorage and are not empty, use them
-      fetchedFarms = JSON.parse(localFarms);
+      fetchedFarmsCoordiantes = JSON.parse(localFarms);
+      fetchedFarmsIDs = JSON.parse(localIDs);
       setLoading(false);
 
     } else {
@@ -104,13 +119,10 @@ const Map = () => {
           },
         });
         map.addControl(drawControl);
-        console.log("ff");
-        console.log(fetchedFarms);
-        console.log(userEmail);
 
         map.addLayer(drawnItems);
-        if (Array.isArray(fetchedFarms)) {
-          fetchedFarms.forEach(farm => {
+        if (Array.isArray(fetchedFarmsCoordiantes)) {
+          fetchedFarmsCoordiantes.forEach(farm => {
             const polygon = L.polygon(farm, { color: 'green' });
             drawnItems.addLayer(polygon);
           });
@@ -121,12 +133,11 @@ const Map = () => {
 
           const onPolygonDrawn = (newPolygon) => {
             newPolygon.push(newPolygon[0]);     
-            console.log(newPolygon);
-            console.log("nn");
+
             // Convert the new polygon to a GeoJSON object
             const newPolygonGeoJSON = turfPolygon([newPolygon]);
           
-            for (const farm of fetchedFarms) {
+            for (const farm of fetchedFarmsCoordiantes) {
               // Convert the existing polygon to a GeoJSON object
               const existingPolygonGeoJSON = turfPolygon([farm]);
           
@@ -154,9 +165,9 @@ const Map = () => {
             // Display confirmation prompt
             const confirmed = window.confirm('Do you want to confirm the area of the drawn farm?');
 
-            if (confirmed &&  onPolygonDrawn(coordinates)) {
-              fetchedFarms.push(coordinates);
-              sessionStorage.setItem('farms', JSON.stringify(fetchedFarms));
+            if (confirmed && onPolygonDrawn(coordinates)) {
+              fetchedFarmsCoordiantes.push(coordinates);
+              sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
               try {
                 const response = await fetch('http://localhost:3002/maprouter/registerfarm', {
                   method: 'POST',
@@ -165,10 +176,17 @@ const Map = () => {
                   },
                   body: JSON.stringify({ coordinates, email: userEmail }),
                 });
-
+            
                 if (response.ok) {
+                  const responseData = await response.json(); // Assuming the server returns JSON with farm ID
+                  const farmId = responseData.id; 
+
+                  fetchedFarmsIDs.push(farmId);
+                  console.log(farmId);
+                  sessionStorage.setItem('farmids', JSON.stringify(fetchedFarmsIDs));
+            
                   console.log('Coordinates successfully sent to the server');
-                  layer.setStyle({color: 'green'})
+                  layer.setStyle({ color: 'green' });
                   drawnItems.addLayer(layer); // Add the confirmed layer to the drawnItems group
                 } else {
                   console.error('Failed to send coordinates to the server');
@@ -188,20 +206,20 @@ const Map = () => {
           const clickedPoint = [e.latlng.lat, e.latlng.lng];
 
           // Check if the clicked point is within any of the existing farm polygons
-          const matchingFarm = fetchedFarms.find((farm) => {
-            console.log(farm);
+          const matchingFarmIndex = fetchedFarmsCoordiantes.findIndex((farm) => {
             const existingPolygonGeoJSON = turfPolygon([farm]);
             const isPointInside = booleanPointInPolygon(clickedPoint, existingPolygonGeoJSON);
             return isPointInside;
           });
 
           // If a matching farm is found, display a popup
-          if (matchingFarm) {
-            const farmIndex = fetchedFarms.indexOf(matchingFarm);
-            const farmPageURL = `/farm/${farmIndex}`; // Adjust the URL based on your routing logic
+          if (matchingFarmIndex !== -1) {
+            const matchingFarm = fetchedFarmsIDs[matchingFarmIndex];
+            setSelectedFarm(matchingFarm);
+            const farmPageURL = `/farm`; // Adjust the URL based on your routing logic
 
             // Display a confirmation prompt
-            const confirmed = window.confirm(`Go to the specific page for Farm ${farmIndex + 1}?`);
+            const confirmed = window.confirm(`Go to the specific page for this farm?`);
 
             if (confirmed) {
               // Redirect to the specific farm page

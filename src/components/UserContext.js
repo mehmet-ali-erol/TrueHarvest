@@ -12,8 +12,17 @@ export const UserProvider = ({ children }) => {
       setUserEmail(email);
     };
 
+    const [selectedFarm, setFarm] = useState(() => {
+        return localStorage.getItem('selectedFarm') || '';
+    });
+
+    const setSelectedFarm = (farm) => {
+        localStorage.setItem('selectedFarm', farm);
+        setFarm(farm);
+    };
+
   return (
-    <UserContext.Provider value={{ userEmail, setUser }}>
+    <UserContext.Provider value={{ userEmail, setUser, selectedFarm, setSelectedFarm  }}>
       {children}
     </UserContext.Provider>
   );

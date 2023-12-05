@@ -4,9 +4,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
-const apiRoutes = require('./src/routes/api');
 const authRoutes = require('./src/routes/auth');
 const mapRoutes = require('./src/routes/maprouter');
+const farmRoutes = require('./src/routes/farmrouter');
 
 const app = express();
 app.use(morgan('combined'));
@@ -30,9 +30,10 @@ db.once('open', () => {
 });
 
 // Use the API routes
-app.use('/api', apiRoutes);
 app.use('/auth', authRoutes);
 app.use('/maprouter', mapRoutes);
+app.use('/farmrouter', farmRoutes);
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
