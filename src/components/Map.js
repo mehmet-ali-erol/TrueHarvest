@@ -74,31 +74,22 @@ const Map = () => {
           attribution: '&copy; <a href="https://www.esri.com/">Esri</a> contributors',
         });
 
-        // Sentinel Hub WMS service
-        const baseUrl = 'https://services.sentinel-hub.com/ogc/wms/8e927087-dcc3-4082-a0ea-96f67fff9809';
-        const sentinelHub = L.tileLayer.wms(baseUrl, {
-          tileSize: 512,
-          attribution: '&copy; <a href="http://www.sentinel-hub.com/" target="_blank">Sentinel Hub</a>',
-          urlProcessingApi: 'https://services.sentinel-hub.com/ogc/wms/1d4de4a3-2f50-493c-abd8-861dec3ae6b2',
-          maxcc: 20,
-          minZoom: 6,
-          maxZoom: 9,
-          preset: 'AGRICULTURE',
-          layers: 'AGRICULTURE',
-          time: '2023-06-01/2023-12-01',
+        // Open Street View
+        const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         });
 
         const baseMaps = {
           'Satelite': esri,
         };
         const overlayMaps = {
-          'Sentinel Hub WMS': sentinelHub,
+          'Open Street Map': osm,
         };
 
         const map = L.map('devTestingDemo', {
           center: [41.4535, 31.7894], // lat/lng in EPSG:4326
           zoom: 9,
-          layers: [esri, sentinelHub],
+          layers: [esri],
         });
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
@@ -113,17 +104,13 @@ const Map = () => {
             rectangle: false,
             circle: false,
           },
-          edit: {
-            featureGroup: new L.FeatureGroup(),
-            remove: true,
-          },
         });
         map.addControl(drawControl);
 
         map.addLayer(drawnItems);
         if (Array.isArray(fetchedFarmsCoordiantes)) {
           fetchedFarmsCoordiantes.forEach(farm => {
-            const polygon = L.polygon(farm, { color: 'yellow' });
+            const polygon = L.polygon(farm, { color: 'red' });
             drawnItems.addLayer(polygon);
           });
         }
@@ -186,7 +173,7 @@ const Map = () => {
                   sessionStorage.setItem('farmids', JSON.stringify(fetchedFarmsIDs));
             
                   console.log('Coordinates successfully sent to the server');
-                  layer.setStyle({ color: 'green' });
+                  layer.setStyle({ color: 'yellow' });
                   drawnItems.addLayer(layer); // Add the confirmed layer to the drawnItems group
                 } else {
                   console.error('Failed to send coordinates to the server');

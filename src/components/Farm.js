@@ -73,7 +73,7 @@ const Farm = () => {
           keyboard: false,
         });
   
-        L.polygon(coordinates, { color: 'yellow' }).addTo(map);
+        L.polygon(coordinates, { color: 'red' }).addTo(map);
         map.fitBounds(L.polygon(coordinates).getBounds());
   
         return () => {
