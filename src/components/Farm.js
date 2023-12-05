@@ -61,7 +61,7 @@ const Farm = () => {
           center: farmCenter,
           zoom: 13,
           layers: [
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png', {
               maxZoom: 19,
             }),
           ],
@@ -73,7 +73,7 @@ const Farm = () => {
           keyboard: false,
         });
   
-        L.polygon(coordinates, { color: 'green' }).addTo(map);
+        L.polygon(coordinates, { color: 'yellow' }).addTo(map);
         map.fitBounds(L.polygon(coordinates).getBounds());
   
         return () => {

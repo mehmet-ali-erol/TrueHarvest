@@ -69,9 +69,9 @@ const Map = () => {
   useEffect(() => {
     if ( !loading)
     {
-        // OpenStreetMap
-        const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        // Esri World Imagery
+        const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '&copy; <a href="https://www.esri.com/">Esri</a> contributors',
         });
 
         // Sentinel Hub WMS service
@@ -89,7 +89,7 @@ const Map = () => {
         });
 
         const baseMaps = {
-          'OpenStreetMap': osm,
+          'Satelite': esri,
         };
         const overlayMaps = {
           'Sentinel Hub WMS': sentinelHub,
@@ -98,7 +98,7 @@ const Map = () => {
         const map = L.map('devTestingDemo', {
           center: [41.4535, 31.7894], // lat/lng in EPSG:4326
           zoom: 9,
-          layers: [osm, sentinelHub],
+          layers: [esri, sentinelHub],
         });
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
@@ -123,7 +123,7 @@ const Map = () => {
         map.addLayer(drawnItems);
         if (Array.isArray(fetchedFarmsCoordiantes)) {
           fetchedFarmsCoordiantes.forEach(farm => {
-            const polygon = L.polygon(farm, { color: 'green' });
+            const polygon = L.polygon(farm, { color: 'yellow' });
             drawnItems.addLayer(polygon);
           });
         }
