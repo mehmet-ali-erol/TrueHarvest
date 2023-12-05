@@ -30,17 +30,17 @@ const Farm = () => {
           // If userEmail or selectedFarm is not available, don't proceed with the fetch
           return;
         }
-  
+
         // Fetch farm details based on userEmail and selectedFarm
         const response = await fetch(`http://localhost:3002/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
-  
+
         if (!response.ok) {
           throw new Error(`Request failed with status: ${response.status}`);
         }
-  
+
         const farmDetails = await response.json();
         console.log(farmDetails);
-  
+
         // If farm details exist, set the form data
         if (farmDetails) {
           setFormData({
@@ -53,16 +53,17 @@ const Farm = () => {
           coordinates = farmDetails.coordinates;
           console.log(coordinates);
         }
-  
+
         const farmPolygon = turfPolygon([coordinates]);
         const farmCenter = center(farmPolygon).geometry.coordinates.reverse();
-  
+
         const map = L.map(mapContainer.current, {
           center: farmCenter,
           zoom: 13,
           layers: [
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png', {
-              maxZoom: 19,
+              maxZoom: 18,
+              minZoom: 2,
             }),
           ],
           dragging: false,
@@ -72,10 +73,10 @@ const Farm = () => {
           boxZoom: false,
           keyboard: false,
         });
-  
+
         L.polygon(coordinates, { color: 'red' }).addTo(map);
         map.fitBounds(L.polygon(coordinates).getBounds());
-  
+
         return () => {
           map.remove();
         };
@@ -83,10 +84,10 @@ const Farm = () => {
         console.error('Error:', error.message);
       }
     };
-  
+
     initializeMap();
   }, []);
-  
+
 
   const sendRequest = async (url, data) => {
     try {
@@ -96,7 +97,7 @@ const Farm = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ selectedFarm, data }),
-      });      
+      });
       console.log(data);
 
       if (!response.ok) {
@@ -111,37 +112,42 @@ const Farm = () => {
   };
 
   const handleSaveFarmName = () => {
-    sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName );
+    sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName);
   };
 
   const handleSaveFarmAddress = () => {
-    sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress );
+    sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress);
   };
 
   const handleAddCropType = () => {
-    sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType );
+    sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType);
   };
 
   const handleSaveSowTime = () => {
-    sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime );
+    sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime);
   };
 
   const handleSaveExpectedHarvestTime = () => {
-    sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime',  formData.expectedHarvestTime);
+    sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime', formData.expectedHarvestTime);
   };
 
   return (
     <Container className="main-container">
-      {/* ... (existing code) */}
+      <Button variant="light" className="mb-3 mr-2">
+        <b>Chart</b>
+      </Button>
+      <Button type="analysis" variant="light" className="mb-3">
+        <b>Analysis</b>
+      </Button>
+      <br></br>
+      <br></br>
+      
+      <Container className="map-container" ref={mapContainer} /> 
+
       <Container className="field-details-container">
         <br></br>
         <h2>Field Information</h2>
         <br></br>
-        <Container className="main-container">
-          {/* ... */}
-            <Container className="map-container" ref={mapContainer} />
-          {/* ... */}
-        </Container>
         <Form>
           <Form.Group as={Row} controlId="formFieldName" className="mb-3">
             <Form.Label column sm="2">
@@ -156,8 +162,8 @@ const Farm = () => {
               />
             </Col>
             <Col sm="2">
-              <Button variant="success" onClick={handleSaveFarmName}>
-                Confirm
+              <Button variant="light" onClick={handleSaveFarmName}>
+                <b>Update</b>
               </Button>
             </Col>
           </Form.Group>
@@ -175,8 +181,8 @@ const Farm = () => {
               />
             </Col>
             <Col sm="2">
-              <Button variant="success" onClick={handleSaveFarmAddress}>
-                Confirm
+              <Button variant="light" onClick={handleSaveFarmAddress}>
+                <b>Update</b>
               </Button>
             </Col>
           </Form.Group>
@@ -194,8 +200,8 @@ const Farm = () => {
               />
             </Col>
             <Col sm="2">
-              <Button variant="success" onClick={handleAddCropType}>
-                Confirm
+              <Button variant="light" onClick={handleAddCropType}>
+                <b>Update</b>
               </Button>
             </Col>
           </Form.Group>
@@ -212,8 +218,8 @@ const Farm = () => {
               />
             </Col>
             <Col sm="2">
-              <Button variant="success" onClick={handleSaveSowTime}>
-                Confirm
+              <Button variant="light" onClick={handleSaveSowTime}>
+                <b>Update</b>
               </Button>
             </Col>
           </Form.Group>
@@ -232,8 +238,8 @@ const Farm = () => {
               />
             </Col>
             <Col sm="2">
-              <Button variant="success" onClick={handleSaveExpectedHarvestTime}>
-                Confirm
+              <Button variant="light" onClick={handleSaveExpectedHarvestTime}>
+                <b>Update</b>
               </Button>
             </Col>
           </Form.Group>
