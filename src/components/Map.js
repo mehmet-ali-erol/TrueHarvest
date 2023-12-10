@@ -9,6 +9,7 @@ const { useState } = require('react');
 require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
+require('./Map.css');
 
 const Map = () => {
   // Current user email
@@ -90,9 +91,12 @@ const Map = () => {
           center: [41.4535, 31.7894], // lat/lng in EPSG:4326
           zoom: 9,
           layers: [esri],
+          maxZoom: 18,
+          minZoom: 5,
         });
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
+        L.drawLocal.draw.toolbar.buttons.polygon = 'Draw your field.';
 
         // Add the draw control
         const drawControl = new L.Control.Draw({
