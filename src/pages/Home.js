@@ -1,7 +1,7 @@
 const React = require('react');
 const { Container, Button, Navbar, Nav, Form, Image } = require('react-bootstrap');
 require('bootstrap/dist/css/bootstrap.min.css');
-require('./Home.css');
+require('../assets/css/Home.css');
 
 
 const Home = () => {
@@ -21,7 +21,7 @@ const Home = () => {
 
       <Container className="page-container">
         <div className="add-farm-container">
-          <Image src={require('./img/map_icon.png')} alt="Farm Image" className="mr-2" rounded />
+          <Image src={require('../assets/img/map_icon.png')} alt="Farm Image" className="mr-2" rounded />
           <br></br>
           <Button variant="light" onClick={handleAddFarm}>
             <b>Add farm</b>

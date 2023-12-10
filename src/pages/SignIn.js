@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from './UserContext'; // Update the path accordingly
+import { useUser } from '../UserContext'; // Update the path accordingly
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './SignIn.css';
+import '../assets/css/SignIn.css';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');

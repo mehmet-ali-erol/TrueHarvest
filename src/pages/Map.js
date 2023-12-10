@@ -1,4 +1,4 @@
-import { useUser} from './UserContext'; 
+import { useUser} from '../UserContext'; 
 import { polygon as turfPolygon, intersect as turfIntersect } from '@turf/turf';
 const booleanPointInPolygon = require('@turf/turf').booleanPointInPolygon;
 const React = require('react');
