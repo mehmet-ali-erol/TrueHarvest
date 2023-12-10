@@ -1,8 +1,9 @@
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import Home from './Home';
-import Map from './Map';
-import Farm from './Farm'
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import Home from './pages/Home';
+import Map from './pages/Map';
+import Farm from './pages/Farm'
+import Main from './pages/Main'
 const React = require('react');
 const { useEffect, useState } = require('react');
 const { Routes, Route, Navigate } = require('react-router-dom');
@@ -23,6 +24,8 @@ export default function AppRouter() {
       <Route path="/home" element={<Home/>} />
       <Route path="/map" element={<Map/>} />
       <Route path="/farm" element={<Farm/>} />
+      <Route path="/main" element={<Main/>} />
+
     </Routes>
   );
 }

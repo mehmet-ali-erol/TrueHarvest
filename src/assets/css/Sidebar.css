@@ -1,0 +1,24 @@
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background: linear-gradient(#545455, #343a40); /* Add this line */
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar li {
+    padding: 10px 0;
+    cursor: pointer;
+}

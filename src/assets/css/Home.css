@@ -9,7 +9,7 @@
 
 .home-container::before {
     content: "";
-    background-image: url("img/field_img.jpg");
+    background-image: url("../img/background.jpeg");
     position: absolute;
     top: 0;
     left: 0;
