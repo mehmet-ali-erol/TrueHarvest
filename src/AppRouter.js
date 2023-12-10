@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Map from './pages/Map';
 import Farm from './pages/Farm'
 import Main from './pages/Main'
+import StartScreen from './pages/StartScreen';
 const React = require('react');
 const { useEffect, useState } = require('react');
 const { Routes, Route, Navigate } = require('react-router-dom');
@@ -25,6 +26,7 @@ export default function AppRouter() {
       <Route path="/map" element={<Map/>} />
       <Route path="/farm" element={<Farm/>} />
       <Route path="/main" element={<Main/>} />
+      <Route path="/start-screen" element={<StartScreen/>} />
 
     </Routes>
   );
