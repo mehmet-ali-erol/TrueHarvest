@@ -8,6 +8,15 @@ const authRoutes = require('./src/routes/auth');
 const mapRoutes = require('./src/routes/maprouter');
 const farmRoutes = require('./src/routes/farmrouter');
 
+
+//location controllers
+const fetchCitiesController = require('./src/controllers/fetchCitiesController');
+const fetchLocationByPointController = require('./src/controllers/fetchLocationByPointController');
+const fetchDistrictsController = require('./src/controllers/fetchDistrictsController');
+const fetchNeighborhoodsController = require('./src/controllers/fetchNeighborhoodsController');
+const fetchParcelController = require('./src/controllers/fetchParcelController');
+
+
 const app = express();
 app.use(morgan('combined'));
 const port = 3002;
@@ -33,6 +42,11 @@ db.once('open', () => {
 app.use('/auth', authRoutes);
 app.use('/maprouter', mapRoutes);
 app.use('/farmrouter', farmRoutes);
+app.get('/fetchCities', fetchCitiesController.fetchCities);
+app.get('/fetchLocationByPoint/:lat/:lng', fetchLocationByPointController.fetchLocationByPoint);
+app.get('/fetchDistricts/:cityId', fetchDistrictsController.fetchDistricts);
+app.get('/fetchNeighborhoods/:districtId', fetchNeighborhoodsController.fetchNeighborhoods);
+app.get('/fetchParcel/:districtId/:landId/:parcelId', fetchParcelController.fetchParcel);
 
 
 app.listen(port, () => {
