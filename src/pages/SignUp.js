@@ -3,7 +3,7 @@ const { useState } = require('react');
 const { Container, Row, Col, Form, Button } = require('react-bootstrap');
 const { Link } = require('react-router-dom');
 require('bootstrap/dist/css/bootstrap.min.css');
-require('./SignUp.css');
+require('../assets/css/SignUp.css');
 
 const SignUp = () => {
   const [username, setUsername] = useState('');

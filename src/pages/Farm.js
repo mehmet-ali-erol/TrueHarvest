@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import { polygon as turfPolygon } from '@turf/turf';
-import { useUser } from './UserContext'; // replace 'path-to-user-context' with the actual path
+import { useUser } from '../UserContext'; // replace 'path-to-user-context' with the actual path
 import { Container, Button, Form, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Farm.css';
+import '../assets/css/Farm.css';
 import center from '@turf/center';
 
 const Farm = () => {
