@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { useUser } from '../UserContext'; // Update the path accordingly
+import { useUser } from '../UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/SignIn.css';
 
@@ -11,7 +11,7 @@ const SignIn = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate(); 
-  const { setUser } = useUser(); // Use the useUser hook at the top level
+  const { setUser } = useUser(); 
 
   const handleSignin = async () => {
     try {

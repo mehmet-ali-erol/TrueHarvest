@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { polygon as turfPolygon } from '@turf/turf';
 import { useUser } from '../UserContext'; // replace 'path-to-user-context' with the actual path
 import { Container, Button, Form, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/Farm.css';
 import center from '@turf/center';
@@ -11,6 +12,7 @@ const Farm = () => {
   const { selectedFarm } = useUser();
   const { userEmail } = useUser();
   const mapContainer = useRef(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fieldName: '',
     fieldAddress: '',
@@ -106,29 +108,72 @@ const Farm = () => {
 
       const result = await response.json();
       console.log(result);
+      return result;
     } catch (error) {
       console.error('Error:', error.message);
     }
   };
 
-  const handleSaveFarmName = () => {
-    sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName);
+  const handleSaveFarmName = async () => {
+    const result = await sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName);
+
+    if (result && result.success) {
+      alert("Farm name updated successfully.");
+    } else {
+      alert('Farm name update failed. Please try again.');
+    }
   };
 
-  const handleSaveFarmAddress = () => {
-    sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress);
+  const handleSaveFarmAddress = async () => {
+    const result = await sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress);
+
+    if (result && result.success) {
+      alert("Farm address updated successfully.");
+    } else {
+      alert('Farm address update failed. Please try again.');
+    }
   };
 
-  const handleAddCropType = () => {
-    sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType);
+  const handleAddCropType = async () => {
+    const result = await sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType);
+
+    if (result && result.success) {
+      alert("Crop type added successfully.");
+    } else {
+      alert('Crop type addition failed. Please try again.');
+    }
   };
 
-  const handleSaveSowTime = () => {
-    sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime);
+  const handleSaveSowTime = async () => {
+    const result = await sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime);
+
+    if (result && result.success) {
+      alert("Sow time updated successfully.");
+    } else {
+      alert('Sow time update failed. Please try again.');
+    }
   };
 
-  const handleSaveExpectedHarvestTime = () => {
-    sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime', formData.expectedHarvestTime);
+  const handleSaveExpectedHarvestTime = async () => {
+    const result = await sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime', formData.expectedHarvestTime);
+
+    if (result && result.success) {
+      alert("Expected harvest time updated successfully.");
+    } else {
+      alert('Expected harvest time update failed. Please try again.');
+    }
+  };
+
+  const handleDeleteFarm = async () => {
+    const result = await sendRequest('http://localhost:3002/farmrouter/deletefarm', formData.fieldName);
+
+    if (result && result.success) {
+      alert('Successfully deleted the selected farm.');
+      navigate('/map');
+    } else {
+      alert('Farm deletion failed.');
+      console.error('Farm deletion failed:', result);
+    }
   };
 
   return (
@@ -139,10 +184,13 @@ const Farm = () => {
       <Button type="analysis" variant="light" className="mb-3">
         <b>Analysis</b>
       </Button>
+      <Button type="Delete" variant="danger" onClick={handleDeleteFarm}>
+        <b>Delete Farm</b>
+      </Button>
       <br></br>
       <br></br>
-      
-      <Container className="map-container" ref={mapContainer} /> 
+
+      <Container className="map-container" ref={mapContainer} />
 
       <Container className="field-details-container">
         <br></br>

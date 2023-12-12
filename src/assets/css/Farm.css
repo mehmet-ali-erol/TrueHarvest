@@ -14,6 +14,10 @@
     background: silver;
 }
 
+.main-container button[type="delete"] {
+    background: #d43543;
+}
+
 .main-container .form-control {
     height: 50px;
     background: whitesmoke;
