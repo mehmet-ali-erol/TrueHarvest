@@ -46,7 +46,7 @@ app.get('/fetchCities', fetchCitiesController.fetchCities);
 app.get('/fetchLocationByPoint/:lat/:lng', fetchLocationByPointController.fetchLocationByPoint);
 app.get('/fetchDistricts/:cityId', fetchDistrictsController.fetchDistricts);
 app.get('/fetchNeighborhoods/:districtId', fetchNeighborhoodsController.fetchNeighborhoods);
-app.get('/fetchParcel/:districtId/:landId/:parcelId', fetchParcelController.fetchParcel);
+app.get('/fetchParcel/:neighbourhoodId/:landId/:parcelId', fetchParcelController.fetchParcel);
 
 
 app.listen(port, () => {
