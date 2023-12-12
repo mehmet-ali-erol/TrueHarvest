@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Map from './pages/Map';
 import Farm from './pages/Farm'
 import Main from './pages/Main'
+import Analysis from './pages/Analysis'
 import StartScreen from './pages/StartScreen';
 const React = require('react');
 const { useEffect, useState } = require('react');
@@ -27,6 +28,7 @@ export default function AppRouter() {
       <Route path="/farm" element={<Farm/>} />
       <Route path="/main" element={<Main/>} />
       <Route path="/start-screen" element={<StartScreen/>} />
+      <Route path="/analysis" element={<Analysis/>} />
 
     </Routes>
   );

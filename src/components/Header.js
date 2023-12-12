@@ -5,10 +5,12 @@ import '../assets/css/Header.css'; // Import the CSS file
 const Header = () => {
     return (
         <div className="header navbar navbar-dark bg-dark bg-gradient">
-            <a className="navbar-brand ms-3" href="#home">True Harvest</a>
-            <div className="d-flex me-3">
-                <img src={Icon} alt="icon" width="50" height="50" className='rounded-circle' />
-            </div>
+                <div className="col-12 col-md-4">
+                    <a className="navbar-brand ms-3" href="#home">True Harvest</a>
+                </div>
+                <div className="col-12 col-md-8 d-flex justify-content-end">
+                    <img src={Icon} alt="icon" width="50" height="50" className='rounded-circle me-3' />
+                </div>
         </div>
     );
 }
