@@ -33,12 +33,8 @@ const SignIn = () => {
       if (response.ok) {
         console.log('Login successful!');
         setUser(email);
-<<<<<<< HEAD
-        navigate('/map');
-=======
         // Use the navigate function to navigate to the home page
         navigate('/main');
->>>>>>> origin/maps-development
       } else {
         setError('Login failed. Please check your email and password.');
       }
