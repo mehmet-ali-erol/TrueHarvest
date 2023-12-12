@@ -9,7 +9,6 @@ const { useState } = require('react');
 require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
-require('./Map.css');
 
 const Map = () => {
   // Current user email

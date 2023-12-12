@@ -18,6 +18,7 @@
   min-width: 100vw;
   padding: 70px 150px 70px 70px;
 
+
   background: #2B2B2C;
   background-image: url("../img/background.jpeg");
   background-repeat: no-repeat;
@@ -28,11 +29,22 @@
 
 .signin-form {
   font-style: italic;
-  padding: 200px ;
-  min-width: 700px;
-  min-height: 700px;
-  max-height: 1000px;
-  max-width: 1000px;
+  padding-top: 200px;
+  padding-left: 250px;
+  min-width: 500px;
+  max-width: 800px;
+}
+
+/* Responsive styles for smaller screens (e.g., mobile) */
+@media (max-width: 1595px) {
+  .signin-container {
+    /* background-size: cover; */
+  }
+
+  .signin-form {
+
+
+  }
 }
 
 .form-label {
@@ -70,7 +82,6 @@ input[type="password"]::-webkit-input-placeholder {
   color: gray;
 }
 
-
 .button-block {
   min-width: 100%;
   width: 100%;
@@ -83,5 +94,3 @@ input[type="password"]::-webkit-input-placeholder {
 .no-underline {
   text-decoration: none;
 }
-
-

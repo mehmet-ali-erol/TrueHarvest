@@ -10,7 +10,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // useNavigate replaces useHistory in v6
+  const navigate = useNavigate(); 
   const { setUser } = useUser(); // Use the useUser hook at the top level
 
   const handleSignin = async () => {
@@ -33,7 +33,6 @@ const SignIn = () => {
       if (response.ok) {
         console.log('Login successful!');
         setUser(email);
-        // Use the navigate function to navigate to the home page
         navigate('/map');
       } else {
         setError('Login failed. Please check your email and password.');
@@ -47,11 +46,11 @@ const SignIn = () => {
   return (
     <Container className="signin-container">
       <Row>
-        <Col xs={12} md={6} className="signin-image">
+        <Col xs={6} md={6} className="signin-image">
           <h1>TrueHarvest</h1>
           <h2><i>Make sure it's harvested</i></h2>
         </Col>
-        <Col xs={12} md={6} className="signin-form">
+        <Col xs={6} md={6} className="signin-form">
           <Form>
             <Form.Group controlId="formUsername">
               <Form.Label>EMAIL</Form.Label>

@@ -1,7 +1,7 @@
 const React = require('react');
 const { useState } = require('react');
 const { Container, Row, Col, Form, Button } = require('react-bootstrap');
-const { Link } = require('react-router-dom');
+const { Link, useNavigate} = require('react-router-dom');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('../assets/css/SignUp.css');
 
@@ -10,43 +10,62 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [reEnterPassword, setReEnterPassword] = useState('');
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); 
 
-  const handleSignUp = () => {
-    // Create an object with user data
-    const userData = {
-      username,
-      email,
-      password,
-      reEnterPassword,
-    };
-
-    // Make an HTTP POST request to your backend
-    fetch('http://localhost:3002/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Registration successful:', data);
-        // Optionally, you can redirect the user or perform other actions upon successful registration.
-      })
-      .catch(error => {
-        console.error('Error during registration:', error);
-        // Handle errors or display error messages to the user.
+  const handleSignUp = async () => {
+    try {
+      setError(null);
+      // Check if any field is empty
+      if (!username || !email || !password || !reEnterPassword) {
+        setError('Please fill in all fields.');
+        return;
+      }
+  
+      // Check if password and re-entered password match
+      if (password !== reEnterPassword) {
+        setError('Passwords do not match.');
+        return;
+      }
+  
+      // Create an object with user data
+      const userData = {
+        username,
+        email,
+        password,
+      };
+  
+      // Make an HTTP POST request to your backend
+      const response = await fetch('http://localhost:3002/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
       });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Registration successful:', data);
+        alert('Registration successful');
+        navigate('/signin');
+      } else {
+        throw setError('Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setError('An unexpected error occurred. Please try again later.');
+    }
   };
 
   return (
     <Container className="signup-container">
       <Row>
-        <Col xs={12} md={6} className="signup-image">
+        <Col xs={6} className="signup-image">
           <h1>TrueHarvest</h1>
           <h2><i>Make sure it's harvested</i></h2>
         </Col>
-        <Col xs={12} md={6} className="signup-form">
+        <Col xs={6} className="signup-form">
           <Form>
             <Form.Group controlId="formUsername">
               <Form.Label>USERNAME</Form.Label>
@@ -88,6 +107,7 @@ const SignUp = () => {
               />
             </Form.Group>
             <br></br>
+            {error && <p className="text-danger">{error}</p>}
             <div className="d-grid gap-2">
               <Button variant="success" onClick={handleSignUp}>
                 SIGN UP
