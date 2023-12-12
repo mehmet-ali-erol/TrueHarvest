@@ -1,7 +1,9 @@
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
-import Map from './pages/Map';
+import MapAddFarmSelect from './pages/MapAddFarmSelect';
+import MapAddFarmDraw from './pages/MapAddFarmDraw';
+import MapMyFarms from './pages/MapMyFarms';
 import Farm from './pages/Farm'
 import Main from './pages/Main'
 const React = require('react');
@@ -22,7 +24,9 @@ export default function AppRouter() {
       <Route path="/signin" element={<SignIn/>} />
       <Route path="/signup" element={<SignUp/>} />
       <Route path="/home" element={<Home/>} />
-      <Route path="/map" element={<Map/>} />
+      <Route path="/mapaddfarmselect" element={<MapAddFarmSelect/>} />
+      <Route path="/mapaddfarmdraw" element={<MapAddFarmDraw/>} />
+      <Route path="/mapmyfarms" element={<MapMyFarms/>} />
       <Route path="/farm" element={<Farm/>} />
       <Route path="/main" element={<Main/>} />
 

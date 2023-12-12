@@ -1,0 +1,17 @@
+.no-padding {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .form-custom {
+    margin: 0 40px;
+    font-size: 1.25rem; /* Adjust as needed */
+  }
+
+  .form-custom .form-control {
+    margin-bottom: 15px; /* Adjust as needed */
+  }
+
+  .align-items-center {
+    align-items: center !important;
+  }

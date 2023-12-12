@@ -10,7 +10,7 @@ require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
 
-const Map = () => {
+const MapDraw = () => {
   // Current user email
   const { userEmail } = useUser();
   const drawnItems = new L.FeatureGroup();
@@ -191,33 +191,6 @@ const Map = () => {
           }
         });
 
-        // Inside the useEffect after creating the map
-        map.on('click', (e) => {
-          const clickedPoint = [e.latlng.lat, e.latlng.lng];
-
-          // Check if the clicked point is within any of the existing farm polygons
-          const matchingFarmIndex = fetchedFarmsCoordiantes.findIndex((farm) => {
-            const existingPolygonGeoJSON = turfPolygon([farm]);
-            const isPointInside = booleanPointInPolygon(clickedPoint, existingPolygonGeoJSON);
-            return isPointInside;
-          });
-
-          // If a matching farm is found, display a popup
-          if (matchingFarmIndex !== -1) {
-            const matchingFarm = fetchedFarmsIDs[matchingFarmIndex];
-            setSelectedFarm(matchingFarm);
-            const farmPageURL = `/farm`; // Adjust the URL based on your routing logic
-
-            // Display a confirmation prompt
-            const confirmed = window.confirm(`Go to the specific page for this farm?`);
-
-            if (confirmed) {
-              // Redirect to the specific farm page
-              window.location.href = farmPageURL;
-            }
-          }
-        });
-
         return () => {
           // Clean up when component unmounts
           map.remove();
@@ -230,4 +203,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default MapDraw;
