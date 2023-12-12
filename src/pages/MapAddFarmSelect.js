@@ -340,6 +340,7 @@ const MapAddFarmSelect = () => {
       } else {
         // Display an error message or alert
         console.error('Please fill in all dropdowns and text fields before finding the field.');
+        alert('Please fill in all dropdowns and text fields before finding the field.');
       }
     } catch (error) {
       console.error('Error handling find field:', error.message);
