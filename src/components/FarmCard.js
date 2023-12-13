@@ -12,14 +12,14 @@ const FarmCard = ({ farm }) => {
   }, []);
 
   return (
-    <Container>
-      <div className="card bg-gradient-light" style={{ width: '12rem', height: '7rem' }}>
+    <div className="container">
+      <div className="card bg-gradient-light" style={{ width: '12rem', height: 'auto' }}>
         <div className="card-body">
           <div className="row">
             <div className="col-4">
               <Image src={FarmImage} ref={imgRef} className="rounded mx-auto d-block" alt="Farm" style={{ width: '50px', height: '50px' }} />
             </div>
-            <div className="col-8">
+            <div className="col-12 col-md-8">
               <div className="row">
                 <p className="fw-bold m-0">{farm.farmname || 'Unnamed Farm'}</p>
                 {/* <p className="fw-normal m-0">{farm.plantName}</p> */}
@@ -31,7 +31,7 @@ const FarmCard = ({ farm }) => {
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

@@ -1,7 +1,8 @@
 .sidebar {
     width: 200px;
-    height: 93.1vh;
-    background: linear-gradient(#545455, #343a40); /* Add this line */
+    height: 100vh;
+    background: rgba(52, 58, 64, 0.5); /* 0.5 is the opacity, adjust it to fit your needs */
+    backdrop-filter: blur(10px); /* 10px is the blur radius, adjust it to fit your needs */
     color: #fff;
     padding: 20px;
     display: flex;
