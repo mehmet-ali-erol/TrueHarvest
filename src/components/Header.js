@@ -1,14 +1,22 @@
 import React from 'react';
-import Icon from '../assets/img/background.jpeg'; // Replace with your actual Icon component or path
-import '../assets/css/Header.css'; // Import the CSS file
+import { Link } from 'react-router-dom';
+import Icon from '../assets/img/background.jpeg';
+import '../assets/css/Header.css';
 
 const Header = () => {
     return (
         <div className="header navbar navbar-dark bg-dark bg-gradient">
-            <a className="navbar-brand ms-3" href="#home">True Harvest</a>
-            <div className="d-flex me-3">
-                <img src={Icon} alt="icon" width="50" height="50" className='rounded-circle' />
-            </div>
+            <Link to="/main" className="navbar-brand ms-3">True Harvest</Link>
+            <Link to="/mapmyfarms" className="navbar-text">My Farms</Link>
+            <Link to="/mapaddfarmselect" className="navbar-text">Add Existing Farm</Link>
+            <Link to="/mapaddfarmdraw" className="navbar-text">Draw Farm</Link>
+            <Link to="/signin" className="navbar-text">Logout</Link>
+
+            <Link to="/profile">
+                <div className="d-flex me-3">
+                    <img src={Icon} alt="icon" width="50" height="50" className='rounded-circle' />
+                </div>
+            </Link>
         </div>
     );
 }

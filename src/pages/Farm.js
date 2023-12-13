@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/Farm.css';
 import center from '@turf/center';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 
 const Farm = () => {
   const { selectedFarm } = useUser();
@@ -177,6 +179,9 @@ const Farm = () => {
   };
 
   return (
+    <Container className="container-fluid m-0 p-0">
+      <Header />
+      <Sidebar />
     <Container className="main-container">
       <Button variant="light" className="mb-3 mr-2">
         <b>Chart</b>
@@ -293,6 +298,7 @@ const Farm = () => {
           </Form.Group>
         </Form>
       </Container>
+    </Container>
     </Container>
   );
 };
