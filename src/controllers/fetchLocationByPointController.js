@@ -2,7 +2,7 @@ const axios = require('axios');
 
 exports.fetchLocationByPoint = async (req, res) => {
     const { lat, lng } = req.params;
-    const apiUrl = `https://backend-track.tarla.io/v1.1/farms/location/info?lat=${lat}&lng=${lng}`;
+    const apiUrl = `https://cbsapi.tkgm.gov.tr/megsiswebapi.v3/api/parsel/${lat}/${lng}`;
 
     try {
         const response = await axios.get(apiUrl);
