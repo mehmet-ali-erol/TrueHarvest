@@ -11,3 +11,11 @@
 .container {
     flex-grow: 1;
 }
+
+.chart-container {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    height: 300px;
+    width: 500px;
+  }

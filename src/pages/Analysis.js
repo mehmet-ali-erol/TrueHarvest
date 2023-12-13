@@ -30,13 +30,13 @@ const Analysis = () => {
   const renderChart = () => {
     switch (chartType) {
       case 'line':
-        return <Line data={chartData} />;
+        return <div className="chart-container"><Line data={chartData} /></div>;
       case 'bar':
-        return <Bar data={chartData} />;
+        return <div className="chart-container"><Bar data={chartData} /></div>;
       case 'pie':
-        return <Pie data={chartData} />;
+        return <div className="chart-container"><Pie data={chartData} /></div>;
       default:
-        return <Line data={chartData} />;
+        return <div className="chart-container"><Line data={chartData} /></div>;
     }
   }
 
@@ -119,14 +119,25 @@ const Analysis = () => {
             </div>
           </div>
 
-          <div className="row mt-10 justify-content-center">
+          <div className="row mt-4 justify-content-center">
             {/* Add two Line charts side by side */}
-            <div className="col-md-6 ">
+            <div className="col-md-6">
               {renderContent()}
             </div>
             <div className="col-md-6">
               {renderContent()}
             </div>
+          </div>
+          <div className="row mt-4 justify-content-center">
+            {view === 'chart' && (
+              <div className="text-center">
+                <h2>Chart Information</h2>
+                <div className="d-flex align-items-center">
+                  <label className="me-3 ms-3">Match rate of charts:</label>
+                  <div className="border rounded p-2" style={{ width: '80%', height: '30px' }}></div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
