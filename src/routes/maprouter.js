@@ -13,12 +13,18 @@ router.post('/registerfarm', async (req, res) => {
   }
 
   try {
+    // Retrieve the count of farms owned by the user
+    const userFarmCount = await Farm.countDocuments({ farmowneremail: email });
+
+    // Generate the farm name based on the count
+    const farmName = `Farm ${userFarmCount + 1}`;
+
     // Create a new farm instance and save it to the database
-    const newFarm = new Farm({ farmowneremail: email, coordinates });
+    const newFarm = new Farm({ farmowneremail: email, coordinates, farmname: farmName });
     await newFarm.save();
 
-    // Include the farm ID in the response
-    return res.status(201).json({ message: 'Farm created successfully', id: newFarm._id });
+    // Include the farm ID and name in the response
+    return res.status(201).json({ message: 'Farm created successfully', id: newFarm._id, name: farmName });
   } catch (error) {
     console.error('Error creating farm:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
