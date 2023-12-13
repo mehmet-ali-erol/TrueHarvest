@@ -1,17 +1,20 @@
 .no-padding {
-    padding: 0 !important;
-    margin: 0 !important;
+    
   }
 
   .form-custom {
     margin: 0 40px;
-    font-size: 1.25rem; /* Adjust as needed */
+    font-size: 1.25rem;
   }
 
   .form-custom .form-control {
-    margin-bottom: 15px; /* Adjust as needed */
+    margin-bottom: 15px; 
   }
 
   .align-items-center {
-    align-items: center !important;
+    align-items: center;
   }
+
+  .no-padding button[name="findfield"] {
+    display: block; margin: auto;
+}

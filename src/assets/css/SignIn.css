@@ -35,18 +35,6 @@
   max-width: 800px;
 }
 
-/* Responsive styles for smaller screens (e.g., mobile) */
-@media (max-width: 1595px) {
-  .signin-container {
-    /* background-size: cover; */
-  }
-
-  .signin-form {
-
-
-  }
-}
-
 .form-label {
   margin-left: 13px;
   margin-top: 10px;
@@ -67,17 +55,17 @@
   background-color: #2B2B2C;
 }
 
-.input-group-text {
+.signin-container .input-group-text {
   background-color: #2B2B2C;
   border: none;
 }
 
-input[type="email"]::-webkit-input-placeholder {
+.signin-container .input[type="email"]::-webkit-input-placeholder {
   font-style: italic;
   color: gray;
 }
 
-input[type="password"]::-webkit-input-placeholder {
+.signin-container .input[type="password"]::-webkit-input-placeholder {
   font-style: italic;
   color: gray;
 }

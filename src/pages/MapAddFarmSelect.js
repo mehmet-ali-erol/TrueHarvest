@@ -376,7 +376,7 @@ const MapAddFarmSelect = () => {
   return (
       <Container fluid className="no-padding">
         <Row className="align-items-center">
-          <Col xs={12} md={4} className="no-padding">
+          <Col xs={2} className="no-padding">
             <Form className="form-custom">
               <Form.Select className="mb-3" onChange={(e) => handleDropdown1Change(e.target.value)}>
                 {dropdown1Options.map((option) => (
@@ -416,10 +416,10 @@ const MapAddFarmSelect = () => {
               />
               
             </Form>
-            <Button onClick={() => handleFindField(fetchedFarmsCoordiantesRef, fetchedFarmsIDsRef, drawnItemsRef)}>Find Field</Button>
+            <Button name="findfield" onClick={() => handleFindField(fetchedFarmsCoordiantesRef, fetchedFarmsIDsRef, drawnItemsRef)}>Find Field</Button>
 
           </Col>
-          <Col xs={12} md={8} className="no-padding">
+          <Col xs={10} className="no-padding">
                 <div id="devTestingDemo" style={{ height: '100vh', width: '100%' }} />
           </Col>
         </Row>

@@ -1,3 +1,5 @@
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 import { useUser } from '../UserContext';
 import { polygon as turfPolygon, intersect as turfIntersect } from '@turf/turf';
 import { useEffect, useState, useRef } from 'react';
@@ -161,7 +163,12 @@ const MapMyFarms = () => {
   };
 
   return (
+    
     <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
+              <div className="container-fluid m-0 p-0">
+            <Header />
+            <Sidebar />
+        </div>
         <select 
         onChange={handlePolygonChange} 
         style={{ 
