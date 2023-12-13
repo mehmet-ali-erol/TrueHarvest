@@ -169,7 +169,7 @@ const Farm = () => {
 
     if (result && result.success) {
       alert('Successfully deleted the selected farm.');
-      navigate('/map');
+      navigate('/main');
     } else {
       alert('Farm deletion failed.');
       console.error('Farm deletion failed:', result);

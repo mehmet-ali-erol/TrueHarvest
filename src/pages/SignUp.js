@@ -27,6 +27,11 @@ const SignUp = () => {
         setError('Passwords do not match.');
         return;
       }
+
+      if (!isValidEmail(email)) {
+        setError('Please enter a valid email address.');
+        return;
+      }
   
       // Create an object with user data
       const userData = {
@@ -50,11 +55,11 @@ const SignUp = () => {
         alert('Registration successful');
         navigate('/signin');
       } else {
-        throw setError('Registration failed. Please try again.');
+        setError('Registration failed. Please try again.');
       }
     } catch (error) {
       console.error('Error during registration:', error);
-      setError('An unexpected error occurred. Please try again later.');
+      setError('This email address already exists in the system.');
     }
   };
 
@@ -77,7 +82,7 @@ const SignUp = () => {
               />
             </Form.Group>
             <br></br>
-            <Form.Group controlId="formEmail">
+            <Form.Group controlId="formBasicEmail">
               <Form.Label>EMAIL</Form.Label>
               <Form.Control
                 type="email"
@@ -124,6 +129,11 @@ const SignUp = () => {
       </Row>
     </Container>
   );
+};
+
+const isValidEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 };
 
 export default SignUp;
