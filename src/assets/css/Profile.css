@@ -1,0 +1,16 @@
+.profile-content button {
+    width: 140px;
+    height: 50px;
+    margin-right: 10px;
+    float: right;
+}
+
+.profile-content .form-control {
+    height: 50px;
+    background: whitesmoke;
+    color: gray;
+}
+
+.profile-content{
+    padding-top: 200px;
+}
