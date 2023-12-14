@@ -210,7 +210,7 @@ const MapAddFarmSelect = () => {
             try {
               const response = await axios.get(`http://localhost:3002/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
               const coordinates = response.data.geometry.coordinates[0];
-              coordinates.forEach(function (coordinate) {
+              await coordinates.forEach(function (coordinate) {
                 coordinate.reverse();
               })
                 
@@ -387,6 +387,8 @@ const MapAddFarmSelect = () => {
         <Header />
         <Row className="align-items-center m-0">
           <Col xs={2} className="left-side">
+            <h1>Let us locate your field using parcel information.</h1>
+            <br></br>
             <Form className="form-custom">
               <Form.Select className="mb-3" onChange={(e) => handleDropdown1Change(e.target.value)}>
                 {dropdown1Options.map((option) => (

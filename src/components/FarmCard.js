@@ -22,11 +22,11 @@ const FarmCard = ({ farm }) => {
 
   return (
     <div className="container" onClick={handleFarmSelect}>
-      <div className="card bg-gradient-light" style={{ width: '12rem', height: 'auto' }}>
+      <div className="card bg-gradient-light" style={{ width: '250px', height: '100px' }}>
         <div className="card-body">
           <div className="row">
             <div className="col-4">
-              <Image src={FarmImage} ref={imgRef} className="rounded mx-auto d-block" alt="Farm" style={{ width: '50px', height: '50px' }} />
+              <Image src={FarmImage} ref={imgRef} className="rounded mx-auto d-block" alt="Farm" style={{ width: '70px', height: '70px' }} />
             </div>
             <div className="col-12 col-md-8">
               <div className="row">

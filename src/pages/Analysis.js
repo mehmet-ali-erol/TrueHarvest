@@ -52,18 +52,17 @@ const Analysis = () => {
     }
   }
 
-
   return (
     <div className="container-fluid m-0 p-0 flex-column">
       <Header />
-      <div className="content d-flex">
+      <div className="content-charts d-flex">
         <div className='container'>
           <div className="row mt-2">
             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
             <Link to="/farm">
               <button
                 className={`btn btn-lg me-md-2 ${view === 'analysis' ? 'btn-success' : 'btn-dark'}`}
-                type="button"
+                type="top-button"
                 onClick={() => setView('analysis')}
               >
                 Analysis
@@ -71,7 +70,7 @@ const Analysis = () => {
               </Link>
               <button
                 className={`btn btn-lg ${view === 'chart' ? 'btn-success' : 'btn-dark'}`}
-                type="button"
+                type="top-button"
                 onClick={() => setView('chart')}
               >
                 Chart

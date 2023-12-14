@@ -1,4 +1,5 @@
 import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 import { useUser} from '../UserContext'; 
 import { polygon as turfPolygon, intersect as turfIntersect } from '@turf/turf';
 const booleanPointInPolygon = require('@turf/turf').booleanPointInPolygon;
@@ -202,7 +203,10 @@ const MapDraw = () => {
   return (
     <div>
       <Header />
+      <div className="content d-flex">
+        <Sidebar />
       <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%'}} />
+    </div>
     </div>
     
   );
