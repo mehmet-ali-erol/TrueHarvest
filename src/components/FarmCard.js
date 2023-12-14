@@ -1,18 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Container, Image } from 'react-bootstrap';
 import FarmImage from '../assets/img/field_img.jpg';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserContext';
 import '../assets/css/FarmCard.css';
 
 const FarmCard = ({ farm }) => {
   const imgRef = useRef();
   const [imgSrc, setImgSrc] = useState(null);
+  const navigate = useNavigate();
+  const { setSelectedFarm } = useUser();
+
+  const handleFarmSelect = () => {
+    setSelectedFarm(farm._id);
+    navigate('/farm');
+  };
 
   useEffect(() => {
     setImgSrc(FarmImage);
   }, []);
 
   return (
-    <div className="container">
+    <div className="container" onClick={handleFarmSelect}>
       <div className="card bg-gradient-light" style={{ width: '12rem', height: 'auto' }}>
         <div className="card-body">
           <div className="row">

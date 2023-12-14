@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import L from 'leaflet';
 import { polygon as turfPolygon } from '@turf/turf';
 import { useUser } from '../UserContext'; // replace 'path-to-user-context' with the actual path
@@ -178,125 +179,129 @@ const Farm = () => {
   };
 
   return (
-    <Container className="container-fluid m-0 p-0">
+    <Container fluid className="m-0 p-0">
       <Header />
-    <Container className="main-container">
-      <Button variant="light" className="mb-3 mr-2">
-        <b>Chart</b>
-      </Button>
-      <Button type="analysis" variant="light" className="mb-3">
-        <b>Analysis</b>
-      </Button>
-      <Button type="Delete" variant="danger" onClick={handleDeleteFarm}>
-        <b>Delete Farm</b>
-      </Button>
-      <br></br>
-      <br></br>
-
-      <Container className="map-container" ref={mapContainer} />
-
-      <Container className="field-details-container">
+      <Container className="main-container">
+        <Link to="/analysis">
+          <Button variant="light" className="mb-3 mr-2">
+            <b>Chart</b>
+          </Button>
+        </Link>
+        <Link to="/farm">
+          <Button type="analysis" variant="light" className="mb-3">
+            <b>Analysis</b>
+          </Button>
+        </Link>
+        <Button type="Delete" variant="danger" onClick={handleDeleteFarm}>
+          <b>Delete Farm</b>
+        </Button>
         <br></br>
-        <h2>Field Information</h2>
         <br></br>
-        <Form>
-          <Form.Group as={Row} controlId="formFieldName" className="mb-3">
-            <Form.Label column sm="2">
-              Field Name
-            </Form.Label>
-            <Col sm="7">
-              <Form.Control
-                type="text"
-                placeholder="Enter field name"
-                value={formData.fieldName}
-                onChange={(e) => setFormData({ ...formData, fieldName: e.target.value })}
-              />
-            </Col>
-            <Col sm="2">
-              <Button variant="light" onClick={handleSaveFarmName}>
-                <b>Update</b>
-              </Button>
-            </Col>
-          </Form.Group>
 
-          <Form.Group as={Row} controlId="formFieldAddress" className="mb-3">
-            <Form.Label column sm="2">
-              Address
-            </Form.Label>
-            <Col sm="7">
-              <Form.Control
-                type="text"
-                placeholder="Enter address"
-                value={formData.fieldAddress}
-                onChange={(e) => setFormData({ ...formData, fieldAddress: e.target.value })}
-              />
-            </Col>
-            <Col sm="2">
-              <Button variant="light" onClick={handleSaveFarmAddress}>
-                <b>Update</b>
-              </Button>
-            </Col>
-          </Form.Group>
+        <Container className="map-container" ref={mapContainer} />
 
-          <Form.Group as={Row} controlId="formCropType" className="mb-3">
-            <Form.Label column sm="2">
-              Crop Type
-            </Form.Label>
-            <Col sm="7">
-              <Form.Control
-                type="text"
-                placeholder="Enter crop type"
-                value={formData.cropType}
-                onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
-              />
-            </Col>
-            <Col sm="2">
-              <Button variant="light" onClick={handleAddCropType}>
-                <b>Update</b>
-              </Button>
-            </Col>
-          </Form.Group>
+        <Container className="field-details-container">
+          <br></br>
+          <h2>Field Information</h2>
+          <br></br>
+          <Form>
+            <Form.Group as={Row} controlId="formFieldName" className="mb-3">
+              <Form.Label column sm="2">
+                Field Name
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter field name"
+                  value={formData.fieldName}
+                  onChange={(e) => setFormData({ ...formData, fieldName: e.target.value })}
+                />
+              </Col>
+              <Col sm="2">
+                <Button variant="light" onClick={handleSaveFarmName}>
+                  <b>Update</b>
+                </Button>
+              </Col>
+            </Form.Group>
 
-          <Form.Group as={Row} controlId="formSowTime" className="mb-3">
-            <Form.Label column sm="2">
-              Sow Time
-            </Form.Label>
-            <Col sm="7">
-              <Form.Control
-                type="date"
-                value={formData.sowTime}
-                onChange={(e) => setFormData({ ...formData, sowTime: e.target.value })}
-              />
-            </Col>
-            <Col sm="2">
-              <Button variant="light" onClick={handleSaveSowTime}>
-                <b>Update</b>
-              </Button>
-            </Col>
-          </Form.Group>
+            <Form.Group as={Row} controlId="formFieldAddress" className="mb-3">
+              <Form.Label column sm="2">
+                Address
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter address"
+                  value={formData.fieldAddress}
+                  onChange={(e) => setFormData({ ...formData, fieldAddress: e.target.value })}
+                />
+              </Col>
+              <Col sm="2">
+                <Button variant="light" onClick={handleSaveFarmAddress}>
+                  <b>Update</b>
+                </Button>
+              </Col>
+            </Form.Group>
 
-          <Form.Group as={Row} controlId="formExpectedHarvestTime" className="mb-3">
-            <Form.Label column sm="2">
-              Expected Harvest Time
-            </Form.Label>
-            <Col sm="7">
-              <Form.Control
-                type="date"
-                value={formData.expectedHarvestTime}
-                onChange={(e) =>
-                  setFormData({ ...formData, expectedHarvestTime: e.target.value })
-                }
-              />
-            </Col>
-            <Col sm="2">
-              <Button variant="light" onClick={handleSaveExpectedHarvestTime}>
-                <b>Update</b>
-              </Button>
-            </Col>
-          </Form.Group>
-        </Form>
+            <Form.Group as={Row} controlId="formCropType" className="mb-3">
+              <Form.Label column sm="2">
+                Crop Type
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter crop type"
+                  value={formData.cropType}
+                  onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                />
+              </Col>
+              <Col sm="2">
+                <Button variant="light" onClick={handleAddCropType}>
+                  <b>Update</b>
+                </Button>
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formSowTime" className="mb-3">
+              <Form.Label column sm="2">
+                Sow Time
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  type="date"
+                  value={formData.sowTime}
+                  onChange={(e) => setFormData({ ...formData, sowTime: e.target.value })}
+                />
+              </Col>
+              <Col sm="2">
+                <Button variant="light" onClick={handleSaveSowTime}>
+                  <b>Update</b>
+                </Button>
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formExpectedHarvestTime" className="mb-3">
+              <Form.Label column sm="2">
+                Expected Harvest Time
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  type="date"
+                  value={formData.expectedHarvestTime}
+                  onChange={(e) =>
+                    setFormData({ ...formData, expectedHarvestTime: e.target.value })
+                  }
+                />
+              </Col>
+              <Col sm="2">
+                <Button variant="light" onClick={handleSaveExpectedHarvestTime}>
+                  <b>Update</b>
+                </Button>
+              </Col>
+            </Form.Group>
+          </Form>
+        </Container>
       </Container>
-    </Container>
     </Container>
   );
 };

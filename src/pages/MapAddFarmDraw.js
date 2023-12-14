@@ -1,3 +1,4 @@
+import Header from '../components/Header';
 import { useUser} from '../UserContext'; 
 import { polygon as turfPolygon, intersect as turfIntersect } from '@turf/turf';
 const booleanPointInPolygon = require('@turf/turf').booleanPointInPolygon;
@@ -199,7 +200,11 @@ const MapDraw = () => {
   }, [loading]); // Empty dependency array ensures useEffect runs only once
 
   return (
-    <div id="devTestingDemo" style={{ height: '100vh', width: '100%' }} />
+    <div>
+      <Header />
+      <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%'}} />
+    </div>
+    
   );
 };
 

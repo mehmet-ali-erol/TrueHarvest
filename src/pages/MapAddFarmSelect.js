@@ -1,3 +1,4 @@
+import Header from '../components/Header';
 import { useUser} from '../UserContext'; 
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
@@ -208,8 +209,16 @@ const MapAddFarmSelect = () => {
           const clickedPoint = [e.latlng.lat, e.latlng.lng];
             try {
               const response = await axios.get(`http://localhost:3002/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
-              const polygonCoordinates = response.data.response['polygon_wkt'];
-              const pcoordinates = wktToCoordinates(polygonCoordinates);
+              const coordinates = response.data.geometry.coordinates[0];
+              coordinates.forEach(function (coordinate) {
+                coordinate.reverse();
+              })
+                
+              if (!coordinates) {
+                console.error('Invalid response format or missing coordinates.');
+                return;
+              }
+              const pcoordinates = coordinates;
               let availablecoordinate = true;
             
               for (const farm of fetchedFarmsCoordiantesRef.current) {
@@ -374,9 +383,10 @@ const MapAddFarmSelect = () => {
 
 
   return (
-      <Container fluid className="no-padding">
+      <Container fluid className="header-container">
+        <Header />
         <Row className="align-items-center">
-          <Col xs={2} className="no-padding">
+          <Col xs={2} className="left-side">
             <Form className="form-custom">
               <Form.Select className="mb-3" onChange={(e) => handleDropdown1Change(e.target.value)}>
                 {dropdown1Options.map((option) => (
@@ -419,39 +429,12 @@ const MapAddFarmSelect = () => {
             <Button name="findfield" onClick={() => handleFindField(fetchedFarmsCoordiantesRef, fetchedFarmsIDsRef, drawnItemsRef)}>Find Field</Button>
 
           </Col>
-          <Col xs={10} className="no-padding">
-                <div id="devTestingDemo" style={{ height: '100vh', width: '100%' }} />
+          <Col xs={10} className="right-side">
+                <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%' }} />
           </Col>
         </Row>
       </Container>
     );
   };
-
-
-  function wktToCoordinates(wktString) {
-    try {
-        const geometry = wellknown.parse(wktString);
-        return swapCoordinates(extractCoordinates(geometry));
-    } catch (error) {
-        console.error('Error parsing WKT:', error.message);
-        return null;
-    }
-}
-
-function extractCoordinates(geometry) {
-  if (geometry.type === 'Point') {
-      return geometry.coordinates;
-  } else if (geometry.type === 'LineString' || geometry.type === 'Polygon') {
-      return geometry.coordinates.flat();
-  } else {
-      console.error('Unsupported geometry type:', geometry.type);
-      return null;
-  }
-}
-
-function swapCoordinates(coordinates) {
-  // Assuming each coordinate is [longitude, latitude]
-  return coordinates.map(coord => [coord[1], coord[0]]);
-}
 
 export default MapAddFarmSelect;

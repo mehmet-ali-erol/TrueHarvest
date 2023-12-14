@@ -51,7 +51,7 @@ const MapMyFarms = () => {
 
   useEffect(() => {
     window.onbeforeunload = () => sessionStorage.clear();
-  
+
     return () => {
       window.onbeforeunload = null;
     };
@@ -77,79 +77,78 @@ const MapMyFarms = () => {
   }, [loading]);
 
   useEffect(() => {
-    if ( !loading)
-    {
-        // Esri World Imagery
-        const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-          attribution: '&copy; <a href="https://www.esri.com/">Esri</a> contributors',
+    if (!loading) {
+      // Esri World Imagery
+      const esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; <a href="https://www.esri.com/">Esri</a> contributors',
+      });
+
+      // Open Street View
+      const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      });
+
+      const baseMaps = {
+        'Satelite': esri,
+      };
+      const overlayMaps = {
+        'Open Street Map': osm,
+      };
+
+      const map = L.map('devTestingDemo', {
+        center: [41.4535, 31.7894], // lat/lng in EPSG:4326
+        zoom: 9,
+        layers: [esri],
+        maxZoom: 18,
+        minZoom: 5,
+      });
+      mapRef.current = map; // Add this line
+
+      L.control.layers(baseMaps, overlayMaps).addTo(map);
+      map.addLayer(drawnItems);
+      if (Array.isArray(fetchedFarmsCoordiantes)) {
+        fetchedFarmsCoordiantes.forEach((farm, index) => {
+          const polygon = L.polygon(farm, { color: 'red' });
+          drawnItems.addLayer(polygon);
+          setPolygons((oldPolygons) => [
+            ...oldPolygons,
+            { polygon, index, farmInfo: fetchedFarmsNames[index] },
+          ]);
+        });
+      }
+
+
+      // Inside the useEffect after creating the map
+      map.on('click', (e) => {
+        const clickedPoint = [e.latlng.lat, e.latlng.lng];
+
+        // Check if the clicked point is within any of the existing farm polygons
+        const matchingFarmIndex = fetchedFarmsCoordiantes.findIndex((farm) => {
+          const existingPolygonGeoJSON = turfPolygon([farm]);
+          const isPointInside = booleanPointInPolygon(clickedPoint, existingPolygonGeoJSON);
+          return isPointInside;
         });
 
-        // Open Street View
-        const osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        });
+        // If a matching farm is found, display a popup
+        if (matchingFarmIndex !== -1) {
+          const matchingFarm = fetchedFarmsIDs[matchingFarmIndex];
+          setSelectedFarm(matchingFarm);
+          const farmPageURL = `/farm`; // Adjust the URL based on your routing logic
 
-        const baseMaps = {
-          'Satelite': esri,
-        };
-        const overlayMaps = {
-          'Open Street Map': osm,
-        };
+          // Display a confirmation prompt
+          const confirmed = window.confirm(`Go to the specific page for this farm?`);
 
-        const map = L.map('devTestingDemo', {
-          center: [41.4535, 31.7894], // lat/lng in EPSG:4326
-          zoom: 9,
-          layers: [esri],
-          maxZoom: 18,
-          minZoom: 5,
-        });
-        mapRef.current = map; // Add this line
-
-        L.control.layers(baseMaps, overlayMaps).addTo(map);
-        map.addLayer(drawnItems);
-        if (Array.isArray(fetchedFarmsCoordiantes)) {
-            fetchedFarmsCoordiantes.forEach((farm, index) => {
-              const polygon = L.polygon(farm, { color: 'red' });
-              drawnItems.addLayer(polygon);
-              setPolygons((oldPolygons) => [
-                ...oldPolygons,
-                { polygon, index, farmInfo: fetchedFarmsNames[index] },
-              ]);
-            });
+          if (confirmed) {
+            // Redirect to the specific farm page
+            window.location.href = farmPageURL;
           }
+        }
+      });
 
-
-        // Inside the useEffect after creating the map
-        map.on('click', (e) => {
-          const clickedPoint = [e.latlng.lat, e.latlng.lng];
-
-          // Check if the clicked point is within any of the existing farm polygons
-          const matchingFarmIndex = fetchedFarmsCoordiantes.findIndex((farm) => {
-            const existingPolygonGeoJSON = turfPolygon([farm]);
-            const isPointInside = booleanPointInPolygon(clickedPoint, existingPolygonGeoJSON);
-            return isPointInside;
-          });
-
-          // If a matching farm is found, display a popup
-          if (matchingFarmIndex !== -1) {
-            const matchingFarm = fetchedFarmsIDs[matchingFarmIndex];
-            setSelectedFarm(matchingFarm);
-            const farmPageURL = `/farm`; // Adjust the URL based on your routing logic
-
-            // Display a confirmation prompt
-            const confirmed = window.confirm(`Go to the specific page for this farm?`);
-
-            if (confirmed) {
-              // Redirect to the specific farm page
-              window.location.href = farmPageURL;
-            }
-          }
-        });
-
-        return () => {
-          // Clean up when component unmounts
-          map.remove();
-        };
+      return () => {
+        // Clean up when component unmounts
+        map.remove();
+      };
     }
   }, [loading]); // Empty dependency array ensures useEffect runs only once
 
@@ -163,33 +162,33 @@ const MapMyFarms = () => {
   };
 
   return (
-    
+
     <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
-              <div className="container-fluid m-0 p-0">
-            <Header />
-            <Sidebar />
-        </div>
-        <select 
-        onChange={handlePolygonChange} 
-        style={{ 
-            position: 'absolute', 
-            top: '5%', 
-            left: '50%', 
+      <Header />
+      <div className="content d-flex">
+        <Sidebar />
+        <select
+          onChange={handlePolygonChange}
+          style={{
+            position: 'absolute',
+            top: '10%',
+            left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '200px', 
+            width: '200px',
             height: '40px',
             fontSize: '16px',
-            zIndex: 1000 
-        }}
+            zIndex: 1000
+          }}
         >
-        <option value="">Select Your Farm</option>
-        {polygons.map(({ farmInfo, index }) => (
+          <option value="">Select Your Farm</option>
+          {polygons.map(({ farmInfo, index }) => (
             <option key={index} value={index}>
-            {farmInfo != "Empty Name" ? farmInfo : `Unnamed Farm ${index + 1}`}
+              {farmInfo != "Empty Name" ? farmInfo : `Unnamed Farm ${index + 1}`}
             </option>
-        ))}
+          ))}
         </select>
-      <div id="devTestingDemo" style={{ height: '100%', width: '100%' }} />
+        <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%' }} />
+      </div>
     </div>
   );
 };
