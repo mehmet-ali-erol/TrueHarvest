@@ -383,9 +383,9 @@ const MapAddFarmSelect = () => {
 
 
   return (
-      <Container fluid className="header-container">
+      <Container fluid className="header-container m-0 p-0">
         <Header />
-        <Row className="align-items-center">
+        <Row className="align-items-center m-0">
           <Col xs={2} className="left-side">
             <Form className="form-custom">
               <Form.Select className="mb-3" onChange={(e) => handleDropdown1Change(e.target.value)}>
@@ -426,10 +426,10 @@ const MapAddFarmSelect = () => {
               />
               
             </Form>
-            <Button name="findfield" onClick={() => handleFindField(fetchedFarmsCoordiantesRef, fetchedFarmsIDsRef, drawnItemsRef)}>Find Field</Button>
+            <Button variant="success" name="findfield" onClick={() => handleFindField(fetchedFarmsCoordiantesRef, fetchedFarmsIDsRef, drawnItemsRef)}>Find Field</Button>
 
           </Col>
-          <Col xs={10} className="right-side">
+          <Col xs={10} className="right-side p-0">
                 <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%' }} />
           </Col>
         </Row>

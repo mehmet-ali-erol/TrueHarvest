@@ -33,8 +33,7 @@ const SignIn = () => {
       if (response.ok) {
         console.log('Login successful!');
         setUser(email);
-        // Use the navigate function to navigate to the home page
-        navigate('/main');
+        navigate('/start-screen');
       } else {
         setError('Login failed. Please check your email and password.');
       }

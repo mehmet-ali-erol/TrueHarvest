@@ -32,7 +32,7 @@ export default function AppRouter() {
       <Route path="/mapaddfarmdraw" element={<MapAddFarmDraw/>} />
       <Route path="/mapmyfarms" element={<MapMyFarms/>} />
       <Route path="/farm" element={<Farm/>} />
-      <Route path="/main" element={<Main/>} />
+      <Route path="/main" element={<MapMyFarms/>} />
       <Route path="/start-screen" element={<StartScreen/>} />
       <Route path="/analysis" element={<Analysis/>} />
       <Route path="/profile" element={<Profile/>} />
