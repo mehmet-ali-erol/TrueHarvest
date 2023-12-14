@@ -8,6 +8,8 @@ import Farm from './pages/Farm'
 import Main from './pages/Main'
 import Analysis from './pages/Analysis'
 import StartScreen from './pages/StartScreen';
+import Profile from './pages/Profile';
+
 const React = require('react');
 const { useEffect, useState } = require('react');
 const { Routes, Route, Navigate } = require('react-router-dom');
@@ -33,6 +35,7 @@ export default function AppRouter() {
       <Route path="/main" element={<Main/>} />
       <Route path="/start-screen" element={<StartScreen/>} />
       <Route path="/analysis" element={<Analysis/>} />
+      <Route path="/profile" element={<Profile/>} />
 
     </Routes>
   );
