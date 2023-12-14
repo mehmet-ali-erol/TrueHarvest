@@ -4,20 +4,62 @@ import FarmImage from '../assets/img/field_img.jpg';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import '../assets/css/FarmCard.css';
+import L from 'leaflet';
+import { polygon as turfPolygon } from '@turf/turf';
+import center from '@turf/center';
 
-const FarmCard = ({ farm }) => {
+const FarmCard = ({ farm, flyToFarmLocation  }) => {
   const imgRef = useRef();
   const [imgSrc, setImgSrc] = useState(null);
   const navigate = useNavigate();
   const { setSelectedFarm } = useUser();
+  const mapContainer = useRef(null);
 
   const handleFarmSelect = () => {
     setSelectedFarm(farm._id);
-    navigate('/farm');
+    flyToFarmLocation(farm.coordinates);
   };
 
   useEffect(() => {
     setImgSrc(FarmImage);
+  }, []);
+
+  useEffect(() => {
+    const initializeMap = async () => {
+      try {
+        const farmPolygon = turfPolygon([farm.coordinates]);
+        const farmCenter = center(farmPolygon).geometry.coordinates.reverse();
+
+        const map = L.map(mapContainer.current, {
+          center: farmCenter,
+          zoom: 13,
+          zoomControl: false,
+          attributionControl: false,
+          layers: [
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png', {
+              maxZoom: 18,
+              minZoom: 2,
+            }),
+          ],
+          dragging: false,
+          touchZoom: false,
+          doubleClickZoom: false,
+          scrollWheelZoom: false,
+          boxZoom: false,
+          keyboard: false,
+        });
+
+        L.polygon(farm.coordinates, { color: 'red' }).addTo(map);
+        map.fitBounds(L.polygon(farm.coordinates).getBounds());
+
+        return () => {
+          map.remove();
+        };
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    };
+    initializeMap();
   }, []);
 
   return (
@@ -26,7 +68,7 @@ const FarmCard = ({ farm }) => {
         <div className="card-body">
           <div className="row">
             <div className="col-4">
-              <Image src={FarmImage} ref={imgRef} className="rounded mx-auto d-block" alt="Farm" style={{ width: '50px', height: '50px' }} />
+              <Container className="map-container2" ref={mapContainer} />
             </div>
             <div className="col-12 col-md-8">
               <div className="row">

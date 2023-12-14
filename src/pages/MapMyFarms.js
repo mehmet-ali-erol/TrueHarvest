@@ -161,32 +161,23 @@ const MapMyFarms = () => {
     }
   };
 
+  const flyToFarmLocation = (coordinates) => {
+    // Assuming mapRef.current exists and has a flyToBounds method
+    if (mapRef.current) {
+      // Create a LatLngBounds object with the given coordinates
+      const bounds = L.latLngBounds(coordinates);
+  
+      // Fly to the bounds of the specified coordinates
+      mapRef.current.flyToBounds(bounds);
+    }
+  };
+
   return (
 
     <div style={{ position: 'relative', height: '100vh', width: '100%' }}>
       <Header />
       <div className="content d-flex">
-        <Sidebar />
-        <select
-          onChange={handlePolygonChange}
-          style={{
-            position: 'absolute',
-            top: '10%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: '200px',
-            height: '40px',
-            fontSize: '16px',
-            zIndex: 1000
-          }}
-        >
-          <option value="">Select Your Farm</option>
-          {polygons.map(({ farmInfo, index }) => (
-            <option key={index} value={index}>
-              {farmInfo != "Empty Name" ? farmInfo : `Unnamed Farm ${index + 1}`}
-            </option>
-          ))}
-        </select>
+        <Sidebar flyToFarmLocation={flyToFarmLocation}/>
         <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%' }} />
       </div>
     </div>

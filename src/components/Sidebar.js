@@ -3,7 +3,7 @@ import '../assets/css/Sidebar.css';
 import { useUser } from '../UserContext';
 import FarmCard from './FarmCard';
 
-const Sidebar = () => {
+const Sidebar = ({ flyToFarmLocation }) => {
   const { userEmail } = useUser();
   const [farmData, setFarmData] = useState([]);
 
@@ -30,7 +30,7 @@ const Sidebar = () => {
       <ul>
         {farmData.map((farm) => (
           <li key={farm._id}>
-            <FarmCard farm={farm} />
+            <FarmCard farm={farm} flyToFarmLocation={flyToFarmLocation}/>
           </li>
         ))}
       </ul>
