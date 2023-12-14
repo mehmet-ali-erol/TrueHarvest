@@ -1,5 +1,5 @@
 .sidebar {
-    width: 220px;
+    width: 300px;
     height: calc(100vh - 70px);
     background: rgba(52, 58, 64, 0.5); /* 0.5 is the opacity, adjust it to fit your needs */
     backdrop-filter: blur(10px); /* 10px is the blur radius, adjust it to fit your needs */

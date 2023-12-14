@@ -1,3 +1,8 @@
+.left-side h1{
+  margin: 0 40px;
+  font-size: 1.5rem;
+}
+
 .form-custom {
   margin: 0 40px;
   font-size: 1.25rem;
@@ -17,5 +22,5 @@
 }
 
 .header-container{
-  background-color: darkgray;
+  background-color: rgba(52, 58, 64, 0.5);
 }

@@ -183,17 +183,17 @@ const Farm = () => {
       <Header />
       <Container className="main-container">
         <Link to="/analysis">
-          <Button variant="light" className="mb-3 mr-2">
-            <b>Chart</b>
+          <Button variant="dark" size="lg" className="mb-3 mr-2">
+            Chart
           </Button>
         </Link>
         <Link to="/farm">
-          <Button type="analysis" variant="light" className="mb-3">
-            <b>Analysis</b>
+          <Button type="analysis" variant="success" size="lg" className="mb-3">
+            Analysis
           </Button>
         </Link>
-        <Button type="Delete" variant="danger" onClick={handleDeleteFarm}>
-          <b>Delete Farm</b>
+        <Button type="Delete" variant="danger" size="lg" onClick={handleDeleteFarm}>
+          Delete Farm
         </Button>
         <br></br>
         <br></br>
@@ -218,8 +218,8 @@ const Farm = () => {
                 />
               </Col>
               <Col sm="2">
-                <Button variant="light" onClick={handleSaveFarmName}>
-                  <b>Update</b>
+                <Button variant="success" size="lg" onClick={handleSaveFarmName}>
+                  Update
                 </Button>
               </Col>
             </Form.Group>
@@ -237,8 +237,8 @@ const Farm = () => {
                 />
               </Col>
               <Col sm="2">
-                <Button variant="light" onClick={handleSaveFarmAddress}>
-                  <b>Update</b>
+                <Button variant="success" size="lg" onClick={handleSaveFarmAddress}>
+                  Update
                 </Button>
               </Col>
             </Form.Group>
@@ -256,8 +256,8 @@ const Farm = () => {
                 />
               </Col>
               <Col sm="2">
-                <Button variant="light" onClick={handleAddCropType}>
-                  <b>Update</b>
+                <Button variant="success" size="lg" onClick={handleAddCropType}>
+                  Update
                 </Button>
               </Col>
             </Form.Group>
@@ -274,8 +274,8 @@ const Farm = () => {
                 />
               </Col>
               <Col sm="2">
-                <Button variant="light" onClick={handleSaveSowTime}>
-                  <b>Update</b>
+                <Button variant="success" size="lg" onClick={handleSaveSowTime}>
+                  Update
                 </Button>
               </Col>
             </Form.Group>
@@ -294,8 +294,8 @@ const Farm = () => {
                 />
               </Col>
               <Col sm="2">
-                <Button variant="light" onClick={handleSaveExpectedHarvestTime}>
-                  <b>Update</b>
+                <Button variant="success" size="lg" onClick={handleSaveExpectedHarvestTime}>
+                  Update
                 </Button>
               </Col>
             </Form.Group>

@@ -1,27 +1,12 @@
 .main-container{
     padding: 60px;
-    /* margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); */
 }
-
 
 .main-container button {
-    width: 120px;
+    width: 140px;
     height: 50px;
-    background: lightgray;
     margin-right: 10px;
     float: right;
-}
-
-.main-container button[type="analysis"] {
-    background: silver;
-}
-
-.main-container button[type="delete"] {
-    background: #d43543;
 }
 
 .main-container .form-control {
@@ -37,8 +22,10 @@
 .map-container{
     border-style: solid;
     border-radius: 25px;
+    border-width: 2px;
     height: 350px;
 }
+
 .main-container h2{
     text-align: center;
 }

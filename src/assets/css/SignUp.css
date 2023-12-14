@@ -49,7 +49,7 @@
     border-right: none;
 }
 
-.form-control:focus {
+.signup-container .form-control:focus {
     color: lightgray;
     background-color: #2B2B2C;
 }
@@ -73,7 +73,6 @@ input[type="password"]::-webkit-input-placeholder {
     font-style: italic;
     color: gray;
 }
-
 
 .button-block {
     min-width: 100%;

@@ -50,7 +50,7 @@
   border-right: none;
 }
 
-.form-control:focus {
+.signin-container .form-control:focus {
   color: lightgray;
   background-color: #2B2B2C;
 }

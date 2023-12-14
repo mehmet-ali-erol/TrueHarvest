@@ -64,7 +64,7 @@ const FarmCard = ({ farm, flyToFarmLocation  }) => {
 
   return (
     <div className="container" onClick={handleFarmSelect}>
-      <div className="card bg-gradient-light" style={{ width: '12rem', height: 'auto' }}>
+      <div className="card bg-gradient-light" style={{ width: '250px', height: '100px' }}>
         <div className="card-body">
           <div className="row">
             <div className="col-4">
