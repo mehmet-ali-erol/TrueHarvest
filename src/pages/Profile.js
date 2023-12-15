@@ -76,7 +76,7 @@ const Profile = () => {
                         <div className="d-flex justify-content-center align-items-center" style={{ width: '200px', height: '200px' }}>
                             <img class="rounded-circle" src={Image} alt="Profile" style={{ marginBottom: '59px', width: '80%', height: '80%', objectFit: 'cover', border: '2px solid #000' }} />
                         </div>
-                        <Form className="form-custom">
+                        <Form className="form-profile">
                             <Form.Group as={Row} controlId="formFieldName" className="mb-3">
                                 <Form.Label column sm="2">
                                     Username
