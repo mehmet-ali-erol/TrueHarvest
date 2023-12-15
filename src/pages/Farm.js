@@ -51,7 +51,7 @@ const Farm = () => {
             fieldName: farmDetails.farmname || '',
             fieldAddress: farmDetails.address || '',
             cropType: farmDetails.cropyypes || '',
-            sowTime: farmDetails.sowsime || '',
+            sowTime: farmDetails.sowtime || '',
             expectedHarvestTime: farmDetails.expectedharvesttime || '',
           });
           coordinates = farmDetails.coordinates;
