@@ -230,7 +230,7 @@ const MapAddFarmSelect = () => {
             
                 if (containsPoint) {
                   // If the point is inside the existing polygon, the new polygon overlaps
-                  console.error('The selected field overlaps with an existing field.');
+                  alert('The selected field overlaps with an existing field.');
                   availablecoordinate = false;
                 }
               }
@@ -285,7 +285,7 @@ const MapAddFarmSelect = () => {
                 },2500);
               }
             } catch (error) {
-              console.error('Error fetching polygon:', error);
+              alert('There is no registered parcel at the specified location.');
             }
           });
         
@@ -349,7 +349,6 @@ const MapAddFarmSelect = () => {
       } else {
         // Display an error message or alert
         console.error('Please fill in all dropdowns and text fields before finding the field.');
-        alert('Please fill in all dropdowns and text fields before finding the field.');
       }
     } catch (error) {
       console.error('Error handling find field:', error.message);
@@ -360,7 +359,7 @@ const MapAddFarmSelect = () => {
     try {
       // Validate inputs
       if (!dropdown1 || !dropdown2 || !dropdown3 || !textField1 || !textField2) {
-        console.error('Please fill in all dropdowns and text fields before finding the field.');
+        alert('Please fill in all dropdowns and text fields before finding the field.');
         return;
       }
   
@@ -378,6 +377,7 @@ const MapAddFarmSelect = () => {
   
     } catch (error) {
       console.error('Error fetching coordinates:', error.message);
+      alert('The parcel with specified information does not exist.')
     }
   };
 
@@ -416,12 +416,14 @@ const MapAddFarmSelect = () => {
               </Form.Select>
               <Form.Control
                 type="text"
+                placeholder="Land"
                 value={textField1}
                 onChange={(e) => setTextField1(e.target.value)}
                 disabled={!dropdown1 || !dropdown2 || !dropdown3}
               />
               <Form.Control
                 type="text"
+                placeholder="Parcel"
                 value={textField2}
                 onChange={(e) => setTextField2(e.target.value)}
                 disabled={!dropdown1 || !dropdown2 || !dropdown3}

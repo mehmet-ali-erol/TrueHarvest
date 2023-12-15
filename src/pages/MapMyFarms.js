@@ -19,7 +19,10 @@ const MapMyFarms = () => {
   const [polygons, setPolygons] = useState([]);
   const [selectedPolygon, setSelectedPolygon] = useState(null);
   const mapRef = useRef(null);
-
+  const fetchedFarmsCoordiantesRef = useRef([]);
+  const fetchedFarmsNamesRef = useRef([]);
+  const fetchedFarmsIDsRef = useRef([]);
+  const drawnItemsRef = useRef(new L.FeatureGroup());
 
 
   let fetchedFarms;
@@ -35,6 +38,9 @@ const MapMyFarms = () => {
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
       fetchedFarmsNames = fetchedFarms.map(farm => farm.farmname || "Empty Name");
+      fetchedFarmsCoordiantesRef.current = fetchedFarmsCoordiantes; 
+      fetchedFarmsIDsRef.current = fetchedFarmsIDs; 
+      fetchedFarmsNamesRef.current = fetchedFarmsNames; 
 
       // Save to localStorage
       sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
@@ -64,9 +70,9 @@ const MapMyFarms = () => {
     const localnames = sessionStorage.getItem('farmnames');
     if (localFarms && JSON.parse(localFarms).length > 0) {
       // If farms exist in localStorage and are not empty, use them
-      fetchedFarmsCoordiantes = JSON.parse(localFarms);
-      fetchedFarmsIDs = JSON.parse(localIDs);
-      fetchedFarmsNames = JSON.parse(localnames);
+      fetchedFarmsCoordiantesRef.current = JSON.parse(localFarms);
+      fetchedFarmsIDsRef.current = JSON.parse(localIDs);
+      fetchedFarmsNamesRef.current = JSON.parse(localnames);
       setLoading(false);
 
     } else {
@@ -103,16 +109,19 @@ const MapMyFarms = () => {
         minZoom: 5,
       });
       mapRef.current = map; // Add this line
+      console.log(fetchedFarmsCoordiantesRef.current);
+      console.log(fetchedFarmsNamesRef.current);
+      console.log(fetchedFarmsIDsRef.current);
 
       L.control.layers(baseMaps, overlayMaps).addTo(map);
       map.addLayer(drawnItems);
-      if (Array.isArray(fetchedFarmsCoordiantes)) {
-        fetchedFarmsCoordiantes.forEach((farm, index) => {
+      if (Array.isArray(fetchedFarmsCoordiantesRef.current)) {
+        fetchedFarmsCoordiantesRef.current.forEach((farm, index) => {
           const polygon = L.polygon(farm, { color: 'red' });
           drawnItems.addLayer(polygon);
           setPolygons((oldPolygons) => [
             ...oldPolygons,
-            { polygon, index, farmInfo: fetchedFarmsNames[index] },
+            { polygon, index, farmInfo: fetchedFarmsNamesRef.current[index] },
           ]);
         });
       }
@@ -123,7 +132,7 @@ const MapMyFarms = () => {
         const clickedPoint = [e.latlng.lat, e.latlng.lng];
 
         // Check if the clicked point is within any of the existing farm polygons
-        const matchingFarmIndex = fetchedFarmsCoordiantes.findIndex((farm) => {
+        const matchingFarmIndex = fetchedFarmsCoordiantesRef.current.findIndex((farm) => {
           const existingPolygonGeoJSON = turfPolygon([farm]);
           const isPointInside = booleanPointInPolygon(clickedPoint, existingPolygonGeoJSON);
           return isPointInside;
@@ -131,7 +140,7 @@ const MapMyFarms = () => {
 
         // If a matching farm is found, display a popup
         if (matchingFarmIndex !== -1) {
-          const matchingFarm = fetchedFarmsIDs[matchingFarmIndex];
+          const matchingFarm = fetchedFarmsIDsRef.current[matchingFarmIndex];
           setSelectedFarm(matchingFarm);
           const farmPageURL = `/farm`; // Adjust the URL based on your routing logic
 

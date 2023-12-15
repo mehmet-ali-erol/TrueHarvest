@@ -20,9 +20,6 @@ const FarmCard = ({ farm, flyToFarmLocation  }) => {
     flyToFarmLocation(farm.coordinates);
   };
 
-  useEffect(() => {
-    setImgSrc(FarmImage);
-  }, []);
 
   useEffect(() => {
     const initializeMap = async () => {
@@ -56,7 +53,6 @@ const FarmCard = ({ farm, flyToFarmLocation  }) => {
           map.remove();
         };
       } catch (error) {
-        console.error('Error:', error.message);
       }
     };
     initializeMap();
