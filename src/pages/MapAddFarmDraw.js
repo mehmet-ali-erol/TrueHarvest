@@ -22,6 +22,7 @@ const MapDraw = () => {
   let fetchedFarms;
   let fetchedFarmsCoordiantes;
   let fetchedFarmsIDs;
+  let fetchedFarmsNames;
   console.log(userEmail);
 
   const fetchData = async () => {
@@ -30,10 +31,11 @@ const MapDraw = () => {
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
-
+      fetchedFarmsNames = fetchedFarms.map(farm => farm.farmname);
       // Save to localStorage
       sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
       sessionStorage.setItem('farmids', JSON.stringify(fetchedFarmsIDs));
+      sessionStorage.setItem('farmnames', JSON.stringify(fetchedFarmsNames));
       setLoading(false);
       console.log("false1");
     } catch (error) {
@@ -55,10 +57,12 @@ const MapDraw = () => {
     console.log('Running useEffect');
     const localFarms = sessionStorage.getItem('farms');
     const localIDs = sessionStorage.getItem('farmids');
+    const localNames = sessionStorage.getItem('farmnames');
     if (localFarms && JSON.parse(localFarms).length > 0) {
       // If farms exist in localStorage and are not empty, use them
       fetchedFarmsCoordiantes = JSON.parse(localFarms);
       fetchedFarmsIDs = JSON.parse(localIDs);
+      fetchedFarmsNames = JSON.parse(localNames);
       setLoading(false);
 
     } else {
