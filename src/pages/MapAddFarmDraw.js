@@ -1,13 +1,11 @@
+import React, { useState, useEffect, useRef } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { useUser} from '../UserContext'; 
 import { polygon as turfPolygon, intersect as turfIntersect } from '@turf/turf';
 const booleanPointInPolygon = require('@turf/turf').booleanPointInPolygon;
-const React = require('react');
-const { useEffect } = require('react');
 const L = require('leaflet');
 const axios = require('axios');
-const { useState } = require('react');
 require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
@@ -18,6 +16,8 @@ const MapDraw = () => {
   const drawnItems = new L.FeatureGroup();
   const [loading, setLoading] = useState(true);
   const { setSelectedFarm } = useUser();
+  const mapRef = useRef(null);
+
 
   let fetchedFarms;
   let fetchedFarmsCoordiantes;
@@ -95,6 +95,7 @@ const MapDraw = () => {
           maxZoom: 18,
           minZoom: 5,
         });
+        mapRef.current = map;
 
         L.control.layers(baseMaps, overlayMaps).addTo(map);
         L.drawLocal.draw.toolbar.buttons.polygon = 'Draw your field.';
@@ -138,7 +139,7 @@ const MapDraw = () => {
           
               if (intersection) {
                 // If the intersection is not null, the new polygon overlaps with the existing polygon
-                console.error('The new polygon overlaps with an existing polygon.');
+                alert('The new polygon overlaps with an existing polygon.');
                 return false;
               }
             }
@@ -200,11 +201,22 @@ const MapDraw = () => {
     }
   }, [loading]); // Empty dependency array ensures useEffect runs only once
 
+  const flyToFarmLocation = (coordinates) => {
+    // Assuming mapRef.current exists and has a flyToBounds method
+    if (mapRef.current) {
+      // Create a LatLngBounds object with the given coordinates
+      const bounds = L.latLngBounds(coordinates);
+  
+      // Fly to the bounds of the specified coordinates
+      mapRef.current.flyToBounds(bounds);
+    }
+  };
+
   return (
     <div>
       <Header />
       <div className="content d-flex">
-        <Sidebar />
+        <Sidebar flyToFarmLocation={flyToFarmLocation}/>
       <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%'}} />
     </div>
     </div>

@@ -72,15 +72,6 @@ const SignIn = () => {
               />
             </Form.Group>
             <br></br>
-            <Form.Group controlId="formRememberMe" className="mb-3">
-              <InputGroup>
-                <InputGroup.Checkbox
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                />
-                <Form.Label className="ms-2">Remember me</Form.Label>
-              </InputGroup>
-            </Form.Group>
             {error && <p className="text-danger">{error}</p>}
             <div className="d-grid gap-2">
               <Button variant="success" onClick={handleSignin}>
