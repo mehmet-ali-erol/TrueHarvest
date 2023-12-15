@@ -24,3 +24,7 @@
     padding: 10px 0;
     cursor: pointer;
 }
+
+.sidebar h1 {
+    border-bottom: solid;
+}
