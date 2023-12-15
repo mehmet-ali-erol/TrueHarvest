@@ -49,4 +49,46 @@ router.post('/signin', async (req, res) => {
   }
 });
 
+router.post('/change-password', async (req, res) => {
+  try {
+    const { userEmail, password } = req.body;
+
+    // Find the user with the provided email
+    const user = await User.findOne({ email: userEmail });
+
+    // Update the password
+    user.password = password;
+    await user.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error during password change:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Endpoint for changing username
+router.post('/change-username', async (req, res) => {
+  try {
+    const { userEmail, userName } = req.body;
+
+    // Find the user with the provided email
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      // User not found
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update the username
+    user.username = userName;
+    await user.save();
+
+    res.json({ message: 'Username changed successfully' });
+  } catch (error) {
+    console.error('Error during username change:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 module.exports = router;

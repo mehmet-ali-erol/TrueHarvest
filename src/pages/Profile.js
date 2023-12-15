@@ -1,41 +1,72 @@
+import { useUser } from '../UserContext';
 import React, { useState, useRef } from 'react';
 import Header from '../components/Header';
-import Image from '../assets/img/background.jpeg'
+import Image from '../assets/img/default-profile.png'
 import { Container, Button, Form, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import '../assets/css/Profile.css';
 
 const Profile = () => {
-    const [selectedFile, setSelectedFile] = useState(null);
-    const fileInput = useRef();
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({
-        username: '',
-        current_password: '',
-        new_password: '',
-    });
+    const { userEmail } = useUser();
+    const [userName, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
 
-    const handleImageClick = () => {
-        fileInput.current.click();
-    }
-
-    const handleFileChange = async (event) => {
-        setSelectedFile(event.target.files[0]);
-
-        const formData = new FormData();
-        formData.append('file', event.target.files[0]);
-
-        const response = await fetch('/api/upload', {
+    const handleChangeUserName = async () => {
+        try {
+          setError(null);
+    
+          if (!userName) {
+            alert('Please enter a username.');
+            return;
+          }
+    
+          const response = await fetch('http://localhost:3002/auth/change-username', {
             method: 'POST',
-            body: formData
-        });
-
-        if (response.ok) {
-            // Handle successful upload
-        } else {
-            // Handle error
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userEmail, userName }),
+          });
+    
+          if (response.ok) {
+            alert('Username was succesfully changed!');
+          } else {
+            alert('There was a problem.');
+          }
+        } catch (error) {
+          setError('An unexpected error occurred. Please try again later.');
         }
-    }
+      };    
+
+      const handleChangePassword = async () => {
+        try {
+          setError(null);
+    
+          if (!password) {
+            alert('Please enter a password.');
+            return;
+          }
+    
+          const response = await fetch('http://localhost:3002/auth/change-password', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userEmail, password }),
+          });
+    
+          if (response.ok) {
+            alert('Password was succesfully changed!');
+          } else {
+            alert('There was a problem.');
+          }
+        } catch (error) {
+          setError('An unexpected error occurred. Please try again later.');
+        }
+      }; 
+
+
     return (
         <div className="container-fluid m-0 p-0 flex-column">
             <Header />
@@ -43,33 +74,18 @@ const Profile = () => {
                 <div className="container">
                     <div className="row justify-content-center mt-3">
                         <div className="d-flex justify-content-center align-items-center" style={{ width: '200px', height: '200px' }}>
-                            <img class="rounded-circle" src={Image} alt="Profile" onClick={handleImageClick} style={{ width: '80%', height: '80%', objectFit: 'cover', border: '3px solid #000' }} />
-                            <input type="file" ref={fileInput} style={{ display: 'none' }} onChange={handleFileChange} />
+                            <img class="rounded-circle" src={Image} alt="Profile" style={{ marginBottom: '59px', width: '80%', height: '80%', objectFit: 'cover', border: '2px solid #000' }} />
                         </div>
-                        <Form>
+                        <Form className="form-custom">
                             <Form.Group as={Row} controlId="formFieldName" className="mb-3">
                                 <Form.Label column sm="2">
                                     Username
                                 </Form.Label>
                                 <Col sm="7">
-                                    <Form.Control type="text" placeholder="Enter a new username" value={formData.fieldName} />
+                                    <Form.Control type="text" placeholder="Enter a new username" value={userName} onChange={(e) => setUserName(e.target.value)}/>
                                 </Col>
                                 <Col sm="2">
-                                    <Button variant="success" size="lg">
-                                        Update
-                                    </Button>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} controlId="formFieldAddress" className="mb-3">
-                                <Form.Label column sm="2">
-                                    Current Password
-                                </Form.Label>
-                                <Col sm="7">
-                                    <Form.Control type="text" placeholder="Enter current password" value={formData.fieldAddress} />
-                                </Col>
-                                <Col sm="2">
-                                    <Button variant="success" size="lg">
+                                    <Button variant="success" size="lg"  onClick={handleChangeUserName}>
                                         Update
                                     </Button>
                                 </Col>
@@ -80,10 +96,10 @@ const Profile = () => {
                                     New Password
                                 </Form.Label>
                                 <Col sm="7">
-                                    <Form.Control type="text" placeholder="Enter new password" value={formData.cropType} />
+                                    <Form.Control type="text" placeholder="Enter new password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                 </Col>
                                 <Col sm="2">
-                                    <Button variant="success" size="lg">
+                                    <Button variant="success" size="lg" onClick={handleChangePassword}>
                                         Update
                                     </Button>
                                 </Col>
