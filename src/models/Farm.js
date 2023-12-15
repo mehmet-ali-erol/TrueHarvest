@@ -21,7 +21,7 @@ const farmSchema = new mongoose.Schema({
 
     croptypes: {
       required: false,
-      type: String,
+      type: [String],
     },
 
     sowtime: {
