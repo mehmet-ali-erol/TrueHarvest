@@ -110,6 +110,8 @@ const MapMyFarms = () => {
       });
       mapRef.current = map; // Add this line
       console.log(fetchedFarmsCoordiantesRef.current);
+      console.log(fetchedFarmsNamesRef.current);
+      console.log(fetchedFarmsIDsRef.current);
 
       L.control.layers(baseMaps, overlayMaps).addTo(map);
       map.addLayer(drawnItems);
