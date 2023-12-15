@@ -16,6 +16,9 @@ const Farm = () => {
   const mapContainer = useRef(null);
   const navigate = useNavigate();
   const [allCropTypes, setAllCropTypes] = useState([]);
+  const [currentCropType, setCurrentCropType] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loaded, setLoaded] = useState(false);
   const [formData, setFormData] = useState({
     fieldName: '',
     fieldAddress: '',
@@ -28,6 +31,15 @@ const Farm = () => {
   console.log(userEmail);
 
   useEffect(() => {
+    fetchCropTypes();
+    if(allCropTypes){
+      setLoading(false)
+    };
+  }, [loading]);
+
+  useEffect(() => {
+    if(!loading && !loaded){
+      setLoaded(true);
     let coordinates;
     const initializeMap = async () => {
       try {
@@ -55,9 +67,10 @@ const Farm = () => {
             sowTime: farmDetails.sowtime || '',
             expectedHarvestTime: farmDetails.expectedharvesttime || '',
           });
+          
           coordinates = farmDetails.coordinates;
-          console.log(coordinates);
         }
+        console.log(allCropTypes);
 
         const farmPolygon = turfPolygon([coordinates]);
         const farmCenter = center(farmPolygon).geometry.coordinates.reverse();
@@ -91,7 +104,7 @@ const Farm = () => {
     };
 
     initializeMap();
-  }, []);
+}}, [loading]);
 
 
   const sendRequest = async (url, data) => {
@@ -145,6 +158,7 @@ const Farm = () => {
     } else {
       alert('Crop type addition failed. Please try again.');
     }
+    setLoading(true);
   };
 
   const handleSaveSowTime = async () => {
@@ -179,20 +193,61 @@ const Farm = () => {
     }
   };
 
-  const fetchAllCropTypes = async () => {
-    try {
-      const response = await fetch('http://localhost:3002/farmrouter/getallcroptypes');
-
-      if (!response.ok) {
-        throw new Error(`Request failed with status: ${response.status}`);
+  const handleDeleteCropType = async () => {
+    console.log(userEmail);
+    console.log(selectedFarm);
+    console.log(currentCropType);
+  
+    if (currentCropType) {
+      try {
+        const response = await fetch('http://localhost:3002/farmrouter/deletecroptype', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userEmail,
+            selectedFarm,
+            currentCropType,
+          }),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const result = await response.json();
+  
+        if (result.success) {
+          alert('Crop type deleted successfully.');
+          setLoading(true); // Trigger a reload of crop types
+        } else {
+          alert('Crop type deletion failed.');
+          console.error('Crop type deletion failed:', result);
+        }
+      } catch (error) {
+        alert('An error occurred while deleting the crop type.');
+        console.error('Error:', error);
       }
-
-      const cropTypes = await response.json();
-      setAllCropTypes(cropTypes);
-    } catch (error) {
-      console.error('Error fetching crop types:', error.message);
+    } else {
+      alert('Crop not selected.');
     }
   };
+
+  const fetchCropTypes = async () => {
+    try {
+      const response = await fetch(`http://localhost:3002/farmrouter/getcroptypes?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setAllCropTypes(data.croptypes);
+    } catch (error) {
+    }
+  };
+
 
   return (
     <Container fluid className="m-0 p-0">
@@ -266,7 +321,7 @@ const Farm = () => {
               <Col sm="7">
                 <Form.Control
                   type="date"
-                  value={formData.sowTime}
+                  value={formData.sowTime.split('T')[0]}
                   onChange={(e) => setFormData({ ...formData, sowTime: e.target.value })}
                 />
               </Col>
@@ -284,7 +339,7 @@ const Farm = () => {
               <Col sm="7">
                 <Form.Control
                   type="date"
-                  value={formData.expectedHarvestTime}
+                  value={formData.expectedHarvestTime.split('T')[0]}
                   onChange={(e) =>
                     setFormData({ ...formData, expectedHarvestTime: e.target.value })
                   }
@@ -323,7 +378,7 @@ const Farm = () => {
               <Col sm="7">
                 <Form.Control
                   as="select"
-                  onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                  onChange={(e) => setCurrentCropType(e.target.value)}
                 >
                   <option value="">Select Crop Type to Delete</option>
                   {allCropTypes.map((cropType) => (
@@ -334,7 +389,7 @@ const Farm = () => {
                 </Form.Control>
               </Col>
               <Col sm="2">
-                <Button variant="danger" size="lg">
+                <Button variant="danger" size="lg" onClick={handleDeleteCropType}>
                   Delete
                 </Button>
               </Col>

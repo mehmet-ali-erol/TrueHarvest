@@ -75,7 +75,7 @@ router.post('/addcroptype', async (req, res) => {
 
     const farm = await Farm.findOneAndUpdate(
       { '_id': objectId },
-      { $set: { 'croptypes': data } },
+      { $push: { 'croptypes': data } },
     );
 
     res.json({ success: true, farm });
@@ -131,6 +131,80 @@ router.post('/deletefarm', async (req, res) => {
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+router.get('/getcroptypes', async (req, res) => {
+  const { userEmail, selectedFarm } = req.query;
+  const objectId = new ObjectId(selectedFarm);
+
+  // Check if userEmail and selectedFarm are provided
+  if (!userEmail || !selectedFarm) {
+    return res.status(400).json({ error: 'Invalid request parameters' });
+  }
+
+  try {
+    // Retrieve farm details based on userEmail and selectedFarm from MongoDB
+    const farmDetails = await Farm.findOne({
+      farmowneremail: userEmail,
+      _id: objectId,
+    });
+
+    if (farmDetails && farmDetails.croptypes) {
+      const croptypes = farmDetails.croptypes;
+      return res.json({ croptypes });
+    }
+
+    return res.status(404).json({ error: 'Croptypes not found for the farm' });
+  } catch (error) {
+    console.error('Error:', error.message);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Endpoint to delete a crop type
+router.post('/deletecroptype', async (req, res) => {
+  const { userEmail, selectedFarm, currentCropType } = req.body;
+  const objectId = new ObjectId(selectedFarm);
+
+    // Check if userEmail and selectedFarm are provided
+    if (!userEmail || !selectedFarm || !currentCropType) {
+      return res.status(400).json({ error: 'Invalid request parameters' });
+    }
+
+  try {
+      // Retrieve farm details based on userEmail and selectedFarm from MongoDB
+      const farm = await Farm.findOne({
+        farmowneremail: userEmail,
+        _id: objectId,
+      });
+    
+
+    // Check if the farm and crop types exist
+    if (farm && farm.croptypes) {
+      const cropTypeIndex = farm.croptypes.indexOf(currentCropType);
+
+      // Check if the crop type exists in the array
+      if (cropTypeIndex !== -1) {
+        // Remove the crop type from the array
+        farm.croptypes.splice(cropTypeIndex, 1);
+
+        // Save the updated farm with the removed crop type
+        await farm.save();
+
+        // Send success response
+        return res.json({ success: true, farm });
+      } else {
+        // Crop type not found, send failure response
+        return res.status(404).json({ success: false, error: 'Crop type not found' });
+      }
+    } else {
+      // Farm or crop types not found, send failure response
+      return res.status(404).json({ success: false, error: 'Farm or crop types not found' });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
