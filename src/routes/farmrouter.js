@@ -70,20 +70,12 @@ router.post('/savefarmaddress', async (req, res) => {
 
 router.post('/addcroptype', async (req, res) => {
   try {
-    const { selectedFarm, cropType } = req.body;
-
-    const coordsArray = selectedFarm.split(',').map(Number);
-
-    // Group the coordinates into pairs
-    const coordinates = [];
-    for (let i = 0; i < coordsArray.length; i += 2) {
-      coordinates.push([coordsArray[i], coordsArray[i + 1]]);
-    }
+    const { selectedFarm, data } = req.body;
+    const objectId = new ObjectId(selectedFarm);
 
     const farm = await Farm.findOneAndUpdate(
-      { 'coordinates': { $eq: coordinates } },
-      { $push: { cropTypes: cropType } },
-      { new: true }
+      { '_id': objectId },
+      { $set: { 'croptypes': data } },
     );
 
     res.json({ success: true, farm });
