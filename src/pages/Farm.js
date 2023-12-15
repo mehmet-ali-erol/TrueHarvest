@@ -15,6 +15,7 @@ const Farm = () => {
   const { userEmail } = useUser();
   const mapContainer = useRef(null);
   const navigate = useNavigate();
+  const [allCropTypes, setAllCropTypes] = useState([]);
   const [formData, setFormData] = useState({
     fieldName: '',
     fieldAddress: '',
@@ -178,6 +179,21 @@ const Farm = () => {
     }
   };
 
+  const fetchAllCropTypes = async () => {
+    try {
+      const response = await fetch('http://localhost:3002/farmrouter/getallcroptypes');
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+
+      const cropTypes = await response.json();
+      setAllCropTypes(cropTypes);
+    } catch (error) {
+      console.error('Error fetching crop types:', error.message);
+    }
+  };
+
   return (
     <Container fluid className="m-0 p-0">
       <Header />
@@ -243,25 +259,6 @@ const Farm = () => {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} controlId="formCropType" className="mb-3">
-              <Form.Label column sm="2">
-                Crop Type
-              </Form.Label>
-              <Col sm="7">
-                <Form.Control
-                  type="text"
-                  placeholder="Enter crop type"
-                  value={formData.cropType}
-                  onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
-                />
-              </Col>
-              <Col sm="2">
-                <Button variant="success" size="lg" onClick={handleAddCropType}>
-                  Update
-                </Button>
-              </Col>
-            </Form.Group>
-
             <Form.Group as={Row} controlId="formSowTime" className="mb-3">
               <Form.Label column sm="2">
                 Sow Time
@@ -299,6 +296,50 @@ const Farm = () => {
                 </Button>
               </Col>
             </Form.Group>
+
+            <Form.Group as={Row} controlId="formCropType" className="mb-3">
+              <Form.Label column sm="2">
+                Add Crop Type
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter crop type"
+                  value={formData.cropType}
+                  onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                />
+              </Col>
+              <Col sm="2">
+                <Button variant="success" size="lg" onClick={handleAddCropType}>
+                  Add
+                </Button>
+              </Col>
+            </Form.Group>
+
+            <Form.Group as={Row} controlId="formDeleteCropType" className="mb-3">
+              <Form.Label column sm="2">
+                Delete Crop Type
+              </Form.Label>
+              <Col sm="7">
+                <Form.Control
+                  as="select"
+                  onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
+                >
+                  <option value="">Select Crop Type to Delete</option>
+                  {allCropTypes.map((cropType) => (
+                    <option key={cropType} value={cropType}>
+                      {cropType}
+                    </option>
+                  ))}
+                </Form.Control>
+              </Col>
+              <Col sm="2">
+                <Button variant="danger" size="lg">
+                  Delete
+                </Button>
+              </Col>
+            </Form.Group>
+
           </Form>
         </Container>
       </Container>
