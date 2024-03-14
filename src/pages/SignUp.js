@@ -55,11 +55,11 @@ const SignUp = () => {
         alert('Registration successful');
         navigate('/signin');
       } else {
-        setError('Registration failed. Please try again.');
+        setError('This email address already exists in the system..');
       }
     } catch (error) {
       console.error('Error during registration:', error);
-      setError('This email address already exists in the system.');
+      setError('Registration failed. Please try again.');
     }
   };
 
