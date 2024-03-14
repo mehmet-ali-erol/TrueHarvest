@@ -49,6 +49,32 @@ router.post('/signin', async (req, res) => {
   }
 });
 
+router.post('/google-signin', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+
+    // Find the user with the provided email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // If the user doesn't exist, create a new user
+      const newUser = new User({
+        email,
+      });
+
+      await newUser.save();
+    }
+   
+    // Authentication successful
+    res.status(200).json({ message: 'Authentication successful' });
+  } catch (error) {
+    console.error('Error during Google sign-in:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 router.post('/change-password', async (req, res) => {
   try {
     const { userEmail, password } = req.body;

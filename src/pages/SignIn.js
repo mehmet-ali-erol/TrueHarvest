@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
+import { GoogleLogin } from '@react-oauth/google';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/SignIn.css';
 
@@ -10,8 +11,8 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); 
-  const { setUser } = useUser(); 
+  const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const handleSignin = async () => {
     try {
@@ -42,6 +43,43 @@ const SignIn = () => {
       setError('An unexpected error occurred. Please try again later.');
     }
   };
+
+  const handleGoogleSignin = async (response) => {
+    try {
+      const { credential } = response;
+
+      // Optionally, decode the JWT to access the user's details (not recommended for secure use cases)
+      // This is client-side decoding for demonstration purposes only
+      const decodedToken = JSON.parse(atob(credential.split('.')[1]));
+      const { email, name } = decodedToken;
+      console.log('User Email:', email);
+      console.log('User Name:', name);
+      console.log('token:', decodedToken);
+
+      // Ideally, send the credential (ID token) to your backend for verification
+      const backendResponse = await fetch('http://localhost:3002/auth/google-signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      console.log(backendResponse.ok);
+      if (backendResponse.ok) {
+        console.log('Google Sign-In successful. User data retrieved in the backend.');
+        // Handle user session setup or redirection here
+        setUser(email);
+        navigate('/start-screen');
+      } else {
+        setError('Google Sign-In failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('An error occurred during Google sign-in:', error);
+      setError('An unexpected error occurred. Please try again later.');
+    }
+  };
+
 
   return (
     <Container className="signin-container">
@@ -77,6 +115,14 @@ const SignIn = () => {
               <Button variant="success" onClick={handleSignin}>
                 SIGN IN
               </Button>
+            </div>
+            <br></br>
+            <div className="d-grid gap-2">
+              <GoogleLogin
+                clientId="70752464639-fl6jrttqq6rkoeb90dqdtl8v3k7l2f2d.apps.googleusercontent.com"
+                onSuccess={handleGoogleSignin}
+              />
+
             </div>
             <p className="mt-3">
               You do not have an account?{' '}

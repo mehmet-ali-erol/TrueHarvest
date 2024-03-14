@@ -26,7 +26,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB or Amazon DocumentDB
-mongoose.connect('mongodb://localhost:27017/harvesters', {
+mongoose.connect('mongodb+srv://deniz:harvester@cluster0.swcbnj3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

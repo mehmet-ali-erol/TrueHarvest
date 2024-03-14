@@ -82,3 +82,8 @@
 .no-underline {
   text-decoration: none;
 }
+
+.customGoogleBtn > div {
+  width: 100% !important;
+  justify-content: center;
+}
