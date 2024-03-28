@@ -16,6 +16,7 @@
     "chart.js": "^4.4.1",
     "cors": "^2.8.5",
     "crypto-browserify": "^3.12.0",
+    "firebase": "^10.9.0",
     "leaflet-draw": "^1.0.4",
     "leaflet-wms": "^0.1.0",
     "mongodb": "^6.3.0",
