@@ -2,8 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../assets/img/default-profile.png';
 import '../assets/css/Header.css';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+
+
 
 const Header = () => {
+  const [activeLink, setActiveLink] = useState('/main');
+
   const handleLogout = () => {
     // Clear local storage
     localStorage.clear();
@@ -15,30 +21,26 @@ const Header = () => {
     // You can use React Router's history object or another navigation method for this
     // For example: history.push('/signin');
   };
-
   return (
     <div className="header navbar navbar-dark bg-dark bg-gradient">
-      <Link to="/main" className="navbar-brand ms-3">
+      <NavLink to="/main" activeClassName="active" className="navbar-brand ms-3 text-decoration-none">
         True Harvest
-      </Link>
-      <Link to="/mapmyfarms" className="navbar-text">
+      </NavLink>
+      <NavLink to="/mapmyfarms" activeClassName="active" className="navbar-text text-decoration-none large-font">
         My Farms
-      </Link>
-      <Link to="/mapaddfarmselect" className="navbar-text">
+      </NavLink>
+      <NavLink to="/mapaddfarmselect" activeClassName="active" className="navbar-text text-decoration-none large-font">
         Add Existing Farm
-      </Link>
-      <Link to="/mapaddfarmdraw" className="navbar-text">
+      </NavLink>
+      <NavLink to="/mapaddfarmdraw" activeClassName="active" className="navbar-text text-decoration-none large-font">
         Draw Farm
-      </Link>
-      <Link to="/signin" className="navbar-text" onClick={handleLogout}>
+      </NavLink>
+      <NavLink to="/signin" activeClassName="active" className="navbar-text text-decoration-none large-font" onClick={handleLogout}>
         Logout
-      </Link>
-
-      <Link to="/profile">
-        <div className="d-flex me-3">
-          <img src={Icon} alt="icon" width="50" height="50" className="rounded-circle" />
-        </div>
-      </Link>
+      </NavLink>
+      <NavLink to="/profile" activeClassName="active" className="d-flex me-3">
+        <img src={Icon} alt="icon" width="50" height="50" className="rounded-circle" />
+      </NavLink>
     </div>
   );
 };
