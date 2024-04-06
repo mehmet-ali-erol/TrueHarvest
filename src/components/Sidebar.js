@@ -27,7 +27,7 @@ const Sidebar = ({ flyToFarmLocation }) => {
 
   return (
     <div className="sidebar">
-      <h1>My Farms</h1>
+      <h2>My Farms</h2>
       <ul>
         {farmData.map((farm) => (
           <li key={farm._id}>
