@@ -37,6 +37,7 @@ const MapAddFarmSelect = () => {
   let fetchedFarms;
   let fetchedFarmsCoordiantes;
   let fetchedFarmsIDs;
+  let fetchedFarmsNames;
 
   const fetchDropdownOptions = async (type, parentId = null) => {
     try {
@@ -109,6 +110,7 @@ const MapAddFarmSelect = () => {
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
+      fetchedFarmsNames = fetchedFarms.map(farm => farm.farmname);
       fetchedFarmsCoordiantesRef.current = fetchedFarmsCoordiantes; 
       fetchedFarmsIDsRef.current = fetchedFarmsIDs; 
 
@@ -116,6 +118,7 @@ const MapAddFarmSelect = () => {
       // Save to localStorage
       sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
       sessionStorage.setItem('farmids', JSON.stringify(fetchedFarmsIDs));
+      sessionStorage.setItem('farmnames', JSON.stringify(fetchedFarmsNames));
       setLoading(false);
     } catch (error) {
       console.error('Error fetching farms:', error);
@@ -134,10 +137,12 @@ const MapAddFarmSelect = () => {
   useEffect(() => {
     const localFarms = sessionStorage.getItem('farms');
     const localIDs = sessionStorage.getItem('farmids');
+    const localNames = sessionStorage.getItem('farmnames');
     if (localFarms && JSON.parse(localFarms).length > 0) {
       // If farms exist in localStorage and are not empty, use them
       fetchedFarmsCoordiantesRef.current = JSON.parse(localFarms);
       fetchedFarmsIDsRef.current = JSON.parse(localIDs);
+      fetchedFarmsNames = JSON.parse(localNames);
       setLoading(false);
 
     } else {
