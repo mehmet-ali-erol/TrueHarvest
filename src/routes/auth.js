@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 router.post('/register', async (req, res) => {
   try {
@@ -12,11 +13,15 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'E-mail already exists.' });
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('hashedPassword:', hashedPassword);
+
     // Create a new user
     const newUser = new User({
       username,
       email,
-      password,
+      password:hashedPassword,
     });
 
     // Save the user to the database
@@ -32,11 +37,10 @@ router.post('/register', async (req, res) => {
 router.post('/signin', async (req, res) => {
   try {
     const { email, password } = req.body;
-
     // Find the user with the provided email
     const user = await User.findOne({ email });
-
-    if (user && user.password === password) {
+    console.log('password:', password, 'user.password', user.password);
+    if (user && await bcrypt.compare(password, user.password)) {
       // Authentication successful
       res.status(200).json({ message: 'Authentication successful' });
     } else {
@@ -52,7 +56,6 @@ router.post('/signin', async (req, res) => {
 router.post('/google-signin', async (req, res) => {
   try {
     const { email } = req.body;
-
 
     // Find the user with the provided email
     const user = await User.findOne({ email });
@@ -78,12 +81,15 @@ router.post('/google-signin', async (req, res) => {
 router.post('/change-password', async (req, res) => {
   try {
     const { userEmail, password } = req.body;
-
+    
     // Find the user with the provided email
     const user = await User.findOne({ email: userEmail });
 
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Update the password
-    user.password = password;
+    user.password = hashedPassword;
     await user.save();
 
     res.json({ message: 'Password changed successfully' });
