@@ -1,7 +1,8 @@
+import logo from '../assets/img/long_logo.png';
 const React = require('react');
 const { useState } = require('react');
 const { Container, Row, Col, Form, Button } = require('react-bootstrap');
-const { Link, useNavigate} = require('react-router-dom');
+const { Link, useNavigate } = require('react-router-dom');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('../assets/css/SignUp.css');
 
@@ -11,7 +12,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [reEnterPassword, setReEnterPassword] = useState('');
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSignUp = async () => {
     try {
@@ -21,7 +22,7 @@ const SignUp = () => {
         setError('Please fill in all fields.');
         return;
       }
-  
+
       // Check if password and re-entered password match
       if (password !== reEnterPassword) {
         setError('Passwords do not match.');
@@ -32,14 +33,14 @@ const SignUp = () => {
         setError('Please enter a valid email address.');
         return;
       }
-  
+
       // Create an object with user data
       const userData = {
         username,
         email,
         password,
       };
-  
+
       // Make an HTTP POST request to your backend
       const response = await fetch('http://localhost:3002/auth/register', {
         method: 'POST',
@@ -48,7 +49,7 @@ const SignUp = () => {
         },
         body: JSON.stringify(userData),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Registration successful:', data);
@@ -67,8 +68,7 @@ const SignUp = () => {
     <Container className="signup-container">
       <Row>
         <Col xs={6} className="signup-image">
-          <h1>TrueHarvest</h1>
-          <h2><i>Make sure it's harvested</i></h2>
+          <img src={logo} alt="TrueHarvest" style={{ width: '550px', height: '550px' }} />
         </Col>
         <Col xs={6} className="signup-form">
           <Form>

@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import { GoogleLogin } from '@react-oauth/google';
+import logo from '../assets/img/long_logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/SignIn.css';
 
@@ -85,8 +86,7 @@ const SignIn = () => {
     <Container className="signin-container">
       <Row>
         <Col xs={6} md={6} className="signin-image">
-          <h1>TrueHarvest</h1>
-          <h2><i>Make sure it's harvested</i></h2>
+        <img src={logo} alt="TrueHarvest" style={{width: '550px', height: '550px'}} />
         </Col>
         <Col xs={6} md={6} className="signin-form">
           <Form>

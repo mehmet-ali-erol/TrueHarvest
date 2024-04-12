@@ -82,3 +82,11 @@ input[type="password"]::-webkit-input-placeholder {
 .btn-success {
     font-style: italic;
 }
+
+.signup-image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+  }
