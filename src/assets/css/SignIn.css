@@ -87,3 +87,11 @@
   width: 100% !important;
   justify-content: center;
 }
+
+.signin-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
