@@ -15,6 +15,7 @@ const fetchLocationByPointController = require('./src/controllers/fetchLocationB
 const fetchDistrictsController = require('./src/controllers/fetchDistrictsController');
 const fetchNeighborhoodsController = require('./src/controllers/fetchNeighborhoodsController');
 const fetchParcelController = require('./src/controllers/fetchParcelController');
+const fetchPredictsController = require("./src/controllers/fetchPredictsController");
 
 const app = express();
 app.use(morgan('combined'));
@@ -46,6 +47,7 @@ app.get('/fetchLocationByPoint/:lat/:lng', fetchLocationByPointController.fetchL
 app.get('/fetchDistricts/:cityId', fetchDistrictsController.fetchDistricts);
 app.get('/fetchNeighborhoods/:districtId', fetchNeighborhoodsController.fetchNeighborhoods);
 app.get('/fetchParcel/:neighbourhoodId/:landId/:parcelId', fetchParcelController.fetchParcel);
+app.get('/fetchPredicts/:min_lon/:max_lon/:min_lat/:max_lat/:start_date/:end_date', fetchPredictsController.fetchPredicts);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
