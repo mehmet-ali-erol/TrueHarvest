@@ -210,6 +210,56 @@ const MapAddFarmSelect = () => {
           });
         }
 
+        const zoomControl = new L.Control.Zoom({ position: 'topright' });
+        map.addControl(zoomControl);
+        
+        const zoomToCoordinatesControl = L.control({ position: 'topleft' });
+        zoomToCoordinatesControl.onAdd = () => {
+          const zoomDiv = L.DomUtil.create('div', 'zoom-to-coordinates-control');
+          zoomDiv.innerHTML = `
+              <form id="zoomForm">
+              <div class="form-group">
+                <label for="latitude"></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="latitude"
+                  placeholder="Latitude"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="longitude"></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="longitude"
+                  placeholder="Longitude"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Zoom
+              </button>
+            </form>
+          `;
+        
+          const form = zoomDiv.querySelector('#zoomForm');
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const latitude = parseFloat(form.querySelector('#latitude').value);
+            const longitude = parseFloat(form.querySelector('#longitude').value);
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+              map.setView([latitude, longitude], 15);
+            } else {
+              alert('Please enter valid coordinates');
+            }
+          });
+        
+          return zoomDiv;
+        };
+        map.addControl(zoomToCoordinatesControl);
+
         map.on('click', async (e) => {
           const clickedPoint = [e.latlng.lat, e.latlng.lng];
             try {

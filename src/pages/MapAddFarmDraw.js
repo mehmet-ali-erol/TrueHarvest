@@ -9,6 +9,7 @@ const axios = require('axios');
 require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
+require('../assets/css/MapAddFarm.css');
 
 const MapDraw = () => {
   // Current user email
@@ -17,6 +18,7 @@ const MapDraw = () => {
   const [loading, setLoading] = useState(true);
   const { setSelectedFarm } = useUser();
   const mapRef = useRef(null);
+  const [zoomCoordinates, setZoomCoordinates] = useState(null);
 
 
   let fetchedFarms;
@@ -124,6 +126,56 @@ const MapDraw = () => {
             drawnItems.addLayer(polygon);
           });
         }
+        
+        const zoomControl = new L.Control.Zoom({ position: 'topright' });
+        map.addControl(zoomControl);
+        
+        const zoomToCoordinatesControl = L.control({ position: 'topleft' });
+        zoomToCoordinatesControl.onAdd = () => {
+          const zoomDiv = L.DomUtil.create('div', 'zoom-to-coordinates-control');
+          zoomDiv.innerHTML = `
+              <form id="zoomForm">
+              <div class="form-group">
+                <label for="latitude"></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="latitude"
+                  placeholder="Latitude"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="longitude"></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="longitude"
+                  placeholder="Longitude"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Zoom
+              </button>
+            </form>
+          `;
+        
+          const form = zoomDiv.querySelector('#zoomForm');
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const latitude = parseFloat(form.querySelector('#latitude').value);
+            const longitude = parseFloat(form.querySelector('#longitude').value);
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+              map.setView([latitude, longitude], 15);
+            } else {
+              alert('Please enter valid coordinates');
+            }
+          });
+        
+          return zoomDiv;
+        };
+        map.addControl(zoomToCoordinatesControl);
 
         // Handle drawn layers
         map.on('draw:created', async (event) => {
@@ -216,16 +268,27 @@ const MapDraw = () => {
     }
   };
 
+  const handleZoomToCoordinates = () => {
+    if (zoomCoordinates && zoomCoordinates.length === 2) {
+      // Assuming mapRef.current exists and has a flyTo method
+      if (mapRef.current) {
+        mapRef.current.flyTo(zoomCoordinates, 15); // Zoom to the coordinates with a zoom level of 15
+      }
+    } else {
+      alert('Please enter valid coordinates.');
+    }
+  };
+
   return (
     <div>
       <Header />
       <div className="content d-flex">
-        <Sidebar flyToFarmLocation={flyToFarmLocation}/>
-      <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%'}} />
+        <Sidebar flyToFarmLocation={flyToFarmLocation} />
+        <div id="devTestingDemo" style={{ height: 'calc(100vh - 70px)', width: '100%' }} />
+      </div>
     </div>
-    </div>
-    
   );
 };
 
 export default MapDraw;
+
