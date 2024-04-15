@@ -36,7 +36,7 @@ label {
 
 input[type="text"] {
   width: 100%; /* Text inputs take full width */
-  max-width: 150px; /* Adjust as needed */
+  max-width: 300px; /* Adjust as needed */
   padding: 8px; /* Adds padding inside text inputs */
   box-sizing: border-box; /* Includes padding in width */
 }
@@ -44,4 +44,11 @@ input[type="text"] {
 button {
   display: block; /* Makes button full width */
   margin-top: 10px; /* Adds space above button */
+}
+
+.custom-input {
+  width: 70%;
+  max-width: 150px;
+  box-sizing: border-box;
+  /* Additional custom styles specific to the input fields */
 }

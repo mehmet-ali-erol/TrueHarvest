@@ -178,6 +178,7 @@ const MapAddFarmSelect = () => {
 
         const map = L.map('devTestingDemo', {
           center: [41.4535, 31.7894], // lat/lng in EPSG:4326
+          zoomSnap: 0,
           zoom: 9,
           layers: [esri],
           maxZoom: 18,
@@ -216,7 +217,7 @@ const MapAddFarmSelect = () => {
           const zoomDiv = L.DomUtil.create('div', 'zoom-to-coordinates-control');
           zoomDiv.innerHTML = `
               <form id="zoomForm">
-              <div class="form-group">
+              <div class="custom-input">
                 <label for="latitude"></label>
                 <input
                   type="text"
@@ -227,7 +228,7 @@ const MapAddFarmSelect = () => {
                   onclick="event.stopPropagation();"
                 />
               </div>
-              <div class="form-group">
+              <div class="custom-input">
                 <label for="longitude"></label>
                 <input
                   type="text"
@@ -261,6 +262,10 @@ const MapAddFarmSelect = () => {
         };
         map.addControl(zoomToCoordinatesControl);
 
+        const reRenderFunction = ()=>{
+          map.fire('viewreset');
+        };
+        
         map.on('click', async (e) => {
           const clickedPoint = [e.latlng.lat, e.latlng.lng];
             try {
@@ -298,6 +303,10 @@ const MapAddFarmSelect = () => {
 
                 // Smoothly animate the map to fit the bounds of the polygon
                 map.flyToBounds(polygon.getBounds(), { duration: 1.5, easeLinearity: 0.5 });
+                map.on('move',reRenderFunction)
+                setTimeout(()=>{
+                  map.off('move',reRenderFunction);
+                },1500);
 
                 // Delay the confirmation prompt to ensure it appears after the animation
                 setTimeout(() => {

@@ -133,7 +133,7 @@ const MapDraw = () => {
           const zoomDiv = L.DomUtil.create('div', 'zoom-to-coordinates-control');
           zoomDiv.innerHTML = `
               <form id="zoomForm">
-              <div class="form-group">
+              <div class="custom-input">
                 <label for="latitude"></label>
                 <input
                   type="text"
@@ -143,7 +143,7 @@ const MapDraw = () => {
                   required
                 />
               </div>
-              <div class="form-group">
+              <div class="custom-input">
                 <label for="longitude"></label>
                 <input
                   type="text"

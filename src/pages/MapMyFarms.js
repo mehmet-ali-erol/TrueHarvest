@@ -176,8 +176,21 @@ const MapMyFarms = () => {
       // Create a LatLngBounds object with the given coordinates
       const bounds = L.latLngBounds(coordinates);
   
-      // Fly to the bounds of the specified coordinates
-      mapRef.current.flyToBounds(bounds);
+      const reRenderFunction = () => {
+        mapRef.current.fire('viewreset');
+      };
+      
+      // Smoothly animate the map to fit the bounds of the polygon
+      mapRef.current.flyToBounds(bounds, { duration: 1.5, easeLinearity: 0.5 });
+      
+      // Attach an event listener to the map movement
+      mapRef.current.on('move', reRenderFunction);
+      
+      // Remove the event listener after 1.5 seconds
+      setTimeout(() => {
+        mapRef.current.off('move', reRenderFunction);
+      }, 1500);
+      
     }
   };
 
