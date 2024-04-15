@@ -210,8 +210,6 @@ const MapAddFarmSelect = () => {
           });
         }
 
-        const zoomControl = new L.Control.Zoom({ position: 'topright' });
-        map.addControl(zoomControl);
         
         const zoomToCoordinatesControl = L.control({ position: 'topleft' });
         zoomToCoordinatesControl.onAdd = () => {
@@ -226,6 +224,7 @@ const MapAddFarmSelect = () => {
                   id="latitude"
                   placeholder="Latitude"
                   required
+                  onclick="event.stopPropagation();"
                 />
               </div>
               <div class="form-group">
@@ -236,9 +235,10 @@ const MapAddFarmSelect = () => {
                   id="longitude"
                   placeholder="Longitude"
                   required
+                  onclick="event.stopPropagation();"
                 />
               </div>
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary" onclick="event.stopPropagation();">
                 Zoom
               </button>
             </form>
@@ -254,6 +254,7 @@ const MapAddFarmSelect = () => {
             } else {
               alert('Please enter valid coordinates');
             }
+            e.stopPropagation();
           });
         
           return zoomDiv;

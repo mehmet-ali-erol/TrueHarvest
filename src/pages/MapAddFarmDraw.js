@@ -127,8 +127,6 @@ const MapDraw = () => {
           });
         }
         
-        const zoomControl = new L.Control.Zoom({ position: 'topright' });
-        map.addControl(zoomControl);
         
         const zoomToCoordinatesControl = L.control({ position: 'topleft' });
         zoomToCoordinatesControl.onAdd = () => {
@@ -171,6 +169,7 @@ const MapDraw = () => {
             } else {
               alert('Please enter valid coordinates');
             }
+            e.stopPropagation();
           });
         
           return zoomDiv;
