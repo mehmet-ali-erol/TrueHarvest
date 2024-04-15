@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { Line, Bar, Pie } from 'react-chartjs-2';
+import { useUser } from '../UserContext';
 import Chart from 'chart.js/auto';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine, faChartBar, faChartPie } from '@fortawesome/free-solid-svg-icons';
@@ -11,20 +12,59 @@ const Analysis = () => {
 
   const [chartType, setChartType] = useState('line');
   const [view, setView] = useState('chart');
+  const { selectedFarm } = useUser();
+  const { userEmail } = useUser();
+  const chartRef = useRef(null);
+  const [chartData, setChartData] = useState(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-  // Sample data for the line charts
-  const chartData = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
-    datasets: [
-      {
-        label: 'Dataset 1',
-        data: [10, 25, 45, 30, 50],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1,
-      },
-    ],
-  };
+  useEffect(() => {
+    const initializeAnalysis = async () => {
+      try {
+
+        if (!userEmail || !selectedFarm) {
+          // If userEmail or selectedFarm is not available, don't proceed with the fetch
+          return;
+        }
+
+        console.log(userEmail, selectedFarm);
+
+        // Fetch NDVI values from /getNdviValues endpoint
+        const ndviResponse = await fetch(`http://localhost:3002/farmrouter/getNdviValues?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+
+        if (!ndviResponse.ok) {
+          throw new Error(`Request failed with status: ${ndviResponse.status}`);
+        }
+
+        const ndviData = await ndviResponse.json();
+        if (ndviData && Array.isArray(ndviData.ndviData)) {
+          // Update chartData using the setChartData function
+          setChartData({
+            labels: ndviData.ndviData.map(data => monthNames[data.month - 1]),            
+            datasets: [
+              {
+                label: 'NDVI',
+                data: ndviData.ndviData.map(data => data.mean),
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1,
+              },
+            ],
+          });
+        }
+        const labels = ndviData.ndviData.map(data => `Month ${data.month}`);
+        console.log(chartData)
+        console.log(labels);
+        setDataLoaded(true);
+
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    };
+
+    initializeAnalysis();
+  }, []);
 
 
   const renderChart = () => {
@@ -59,14 +99,14 @@ const Analysis = () => {
         <div className='container'>
           <div className="row mt-2">
             <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-            <Link to="/farm">
-              <button
-                className={`btn btn-lg me-md-2 ${view === 'analysis' ? 'btn-success' : 'btn-dark'}`}
-                type="top-button"
-                onClick={() => setView('analysis')}
-              >
-                Analysis
-              </button>
+              <Link to="/farm">
+                <button
+                  className={`btn btn-lg me-md-2 ${view === 'analysis' ? 'btn-success' : 'btn-dark'}`}
+                  type="top-button"
+                  onClick={() => setView('analysis')}
+                >
+                  Analysis
+                </button>
               </Link>
               <button
                 className={`btn btn-lg ${view === 'chart' ? 'btn-success' : 'btn-dark'}`}
@@ -122,10 +162,10 @@ const Analysis = () => {
           <div className="row mt-4 justify-content-center">
             {/* Add two Line charts side by side */}
             <div className="col-md-6">
-              {renderContent()}
+              {dataLoaded && renderContent()}
             </div>
             <div className="col-md-6">
-              {renderContent()}
+              {dataLoaded && renderContent()}
             </div>
           </div>
           <div className="row mt-4 justify-content-center">
