@@ -14,6 +14,7 @@ import os
 
 # Path to the current file (e.g., views.py)
 CURRENT_FILE_DIR = os.path.dirname(os.path.abspath(__file__))
+ee.Initialize(project='ee-truharvest')
 
 # Path to the parent of the current file directory
 BASE_DIR = os.path.dirname(CURRENT_FILE_DIR)
@@ -24,8 +25,6 @@ BASE_DIR = os.path.dirname(CURRENT_FILE_DIR)
 
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(BASE_DIR, 'fine-jetty-417618-968bb48225bc.json')
-
-ee.Initialize(project='ee-truharvest')
 google_cloud_exporter = EarthEngineExporter(dest_bucket="truecropharvest")
 
 

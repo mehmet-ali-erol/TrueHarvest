@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import { Line, Bar, Pie } from 'react-chartjs-2';
 import { useUser } from '../UserContext';
+import HeatMap from 'react-heatmap-grid';
 import Chart from 'chart.js/auto';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine, faChartBar, faChartPie } from '@fortawesome/free-solid-svg-icons';
@@ -41,7 +42,7 @@ const Analysis = () => {
         if (ndviData && Array.isArray(ndviData.ndviData)) {
           // Update chartData using the setChartData function
           setChartData({
-            labels: ndviData.ndviData.map(data => monthNames[data.month - 1]),            
+            labels: ndviData.ndviData.map(data => monthNames[data.month - 1]),
             datasets: [
               {
                 label: 'NDVI',
@@ -80,6 +81,24 @@ const Analysis = () => {
     }
   }
 
+  const renderHeatmap = () => {
+    // You'll need to provide your own data for the heatmap
+    const xLabels = ['1', '2', '3'];
+    const yLabels = ['A', 'B', 'C'];
+    const data = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
+
+    return (
+      <div>
+        <HeatMap
+          xLabels={xLabels}
+          yLabels={yLabels}
+          data={data}
+        />
+      </div>
+    );
+  }
+
+
   const renderContent = () => {
     switch (view) {
       case 'chart':
@@ -87,6 +106,8 @@ const Analysis = () => {
       case 'analysis':
         // Render nothing for now
         return null;
+      case 'prediction':
+        return renderHeatmap();
       default:
         return renderChart();
     }
@@ -105,7 +126,7 @@ const Analysis = () => {
                   type="top-button"
                   onClick={() => setView('analysis')}
                 >
-                  Analysis
+                  Information
                 </button>
               </Link>
               <button
@@ -115,55 +136,55 @@ const Analysis = () => {
               >
                 Chart
               </button>
+
+              <button
+                className={`btn btn-lg ${view === 'prediction' ? 'btn-success' : 'btn-dark'}`}
+                type="top-button"
+                onClick={() => setView('prediction')}
+              >
+                Prediction
+              </button>
             </div>
+
 
           </div>
 
-          <div className="row mt-4">
-            <div className="d-flex justify-content-between">
-              <div className="btn-group" role="group" aria-label="Button group">
-                <button
-                  className={`btn ${chartType === 'line' ? 'btn-success' : 'btn-dark'}`}
-                  type="button"
-                  onClick={() => setChartType('line')}
-                >
-                  <FontAwesomeIcon icon={faChartLine} />
-                </button>
-                <button
-                  className={`btn ${chartType === 'bar' ? 'btn-success' : 'btn-dark'}`}
-                  type="button"
-                  onClick={() => setChartType('bar')}
-                >
-                  <FontAwesomeIcon icon={faChartBar} />
-                </button>
-                <button
-                  className={`btn ${chartType === 'pie' ? 'btn-success' : 'btn-dark'}`}
-                  type="button"
-                  onClick={() => setChartType('pie')}
-                >
-                  <FontAwesomeIcon icon={faChartPie} />
-                </button>
+          {view !== 'prediction' && (
+            <div className="row mt-4">
+              <div className="d-flex justify-content-between">
+                <div className="btn-group" role="group" aria-label="Button group">
+                  <button
+                    className={`btn ${chartType === 'line' ? 'btn-success' : 'btn-dark'}`}
+                    type="button"
+                    onClick={() => setChartType('line')}
+                  >
+                    <FontAwesomeIcon icon={faChartLine} />
+                  </button>
+                  <button
+                    className={`btn ${chartType === 'bar' ? 'btn-success' : 'btn-dark'}`}
+                    type="button"
+                    onClick={() => setChartType('bar')}
+                  >
+                    <FontAwesomeIcon icon={faChartBar} />
+                  </button>
+                  <button
+                    className={`btn ${chartType === 'pie' ? 'btn-success' : 'btn-dark'}`}
+                    type="button"
+                    onClick={() => setChartType('pie')}
+                  >
+                    <FontAwesomeIcon icon={faChartPie} />
+                  </button>
+                </div>
               </div>
-              <div className="btn-group" role="group" aria-label="Button group">
-                <button className="btn btn-success" type="button">
-                  NDVI
-                </button>
-                <button className="btn btn-dark" type="button">
-                  NDWI
-                </button>
-                <button className="btn btn-dark" type="button">
-                  NDMI
-                </button>
-              </div>
-
             </div>
-          </div>
+          )}
 
           <div className="row mt-4 justify-content-center">
-            {/* Add two Line charts side by side */}
-            <div className="col-md-6">
-              {dataLoaded && renderContent()}
-            </div>
+            {view !== 'prediction' && (
+              <div className="col-md-6">
+                {dataLoaded && renderContent()}
+              </div>
+            )}
             <div className="col-md-6">
               {dataLoaded && renderContent()}
             </div>

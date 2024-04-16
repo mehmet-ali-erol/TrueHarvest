@@ -402,4 +402,90 @@ router.delete('/deleteNdviValues', async (req, res) => {
 });
 
 
+router.post('/getPrediction', async (req, res) => {
+  const { sowingTime, harvestTime, coordinates } = req.body;
+
+  // Calculate min_lat, max_lat, min_lon, and max_lon from coordinates
+  const min_lat = Math.min(...coordinates.map(coord => coord[0]));
+  const max_lat = Math.max(...coordinates.map(coord => coord[0]));
+  const min_lon = Math.min(...coordinates.map(coord => coord[1]));
+  const max_lon = Math.max(...coordinates.map(coord => coord[1]));
+
+  // Construct the URL for the request
+  const url = `http://localhost:8000/export-and-predict/?min_lon=${min_lon}&max_lon=${max_lon}&min_lat=${min_lat}&max_lat=${max_lat}&start_date=${sowingTime}&end_date=${harvestTime}`;
+
+  try {
+    // Send the GET request
+    const response = await axios.get(url);
+
+    // Return the response from the prediction service
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+
+
+// Endpoint to save prediction data
+router.post('/savePrediction', async (req, res) => {
+  const { userEmail, selectedFarm, predData } = req.body;
+
+  // Check if userEmail, selectedFarm, and predData are provided
+  if (!userEmail || !selectedFarm || !predData) {
+    return res.status(400).json({ error: 'Invalid request parameters' });
+  }
+
+  const objectId = new ObjectId(selectedFarm);
+
+  try {
+    // Update farm details with predData based on userEmail and selectedFarm
+    const updatedFarm = await Farm.findOneAndUpdate(
+      { farmowneremail: userEmail, _id: objectId },
+      { $set: predData },
+      { new: true }
+    );
+
+    if (!updatedFarm) {
+      return res.status(404).json({ error: 'Farm not found' });
+    }
+
+    return res.json({ message: 'Prediction data saved successfully' });
+  } catch (error) {
+    console.error('Error:', error.message);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+// Endpoint to delete prediction data
+router.delete('/deletePredictionData', async (req, res) => {
+  const { userEmail, selectedFarm } = req.body;
+
+  // Check if userEmail and selectedFarm are provided
+  if (!userEmail || !selectedFarm) {
+    return res.status(400).json({ error: 'Invalid request parameters' });
+  }
+
+  const objectId = new ObjectId(selectedFarm);
+
+  try {
+    // Update farm details to remove predData based on userEmail and selectedFarm
+    const updatedFarm = await Farm.findOneAndUpdate(
+      { farmowneremail: userEmail, _id: objectId },
+      { $unset: { predData: "" } },
+      { new: true }
+    );
+
+    if (!updatedFarm) {
+      return res.status(404).json({ error: 'Farm not found' });
+    }
+
+    return res.json({ message: 'Prediction data deleted successfully' });
+  } catch (error) {
+    console.error('Error:', error.message);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 module.exports = router;
