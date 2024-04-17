@@ -417,7 +417,6 @@ const Farm = () => {
               </Form.Label>
               <Col sm="9">
                 <Form.Control
-                  type="text"
                   placeholder="Enter field name"
                   value={formData.fieldName}
                   onChange={(e) => setFormData({ ...formData, fieldName: e.target.value })}
@@ -432,7 +431,6 @@ const Farm = () => {
               </Form.Label>
               <Col sm="9">
                 <Form.Control
-                  type="text"
                   placeholder="Enter address"
                   value={formData.fieldAddress}
                   onChange={(e) => setFormData({ ...formData, fieldAddress: e.target.value })}
@@ -474,7 +472,6 @@ const Farm = () => {
               </Form.Label>
               <Col sm="9">
                 <Form.Control
-                  type="text"
                   placeholder="Enter crop type"
                   value={formData.cropType}
                   onChange={(e) => setFormData({ ...formData, cropType: e.target.value })}
