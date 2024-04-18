@@ -410,16 +410,15 @@ router.post('/getPrediction', async (req, res) => {
   const max_lat = Math.max(...coordinates.map(coord => coord[0]));
   const min_lon = Math.min(...coordinates.map(coord => coord[1]));
   const max_lon = Math.max(...coordinates.map(coord => coord[1]));
+  console.log("sowingtime:", sowingTime, "harvesttime:" , harvestTime);
 
   // Construct the URL for the request
   const url = `http://localhost:8000/export-and-predict/?min_lon=${min_lon}&max_lon=${max_lon}&min_lat=${min_lat}&max_lat=${max_lat}&start_date=${sowingTime}&end_date=${harvestTime}`;
 
   try {
     // Send the GET request
-    const response = await axios.get(url);
-
-    // Return the response from the prediction service
-    return res.json(response.data);
+    const response = await axios.get(url); 
+    return res.status(200).json(response.data);
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ success: false, error: 'Internal Server Error' });

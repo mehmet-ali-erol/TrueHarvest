@@ -1,4 +1,6 @@
 from datetime import datetime
+from dateutil.parser import parse
+from dateutil.relativedelta import relativedelta
 import asyncio
 from cropharvest.inference import Inference
 from django.http import JsonResponse
@@ -37,15 +39,19 @@ async def export_and_predict(request):
     max_lon = float(request.GET.get('max_lon'))
     min_lat = float(request.GET.get('min_lat'))
     max_lat = float(request.GET.get('max_lat'))
-    start_date_str = request.GET.get('start_date')  # Consider parsing to date object as needed
-    end_date_str = request.GET.get('end_date')
-
-    # Convert start_date and end_date from string to datetime.date objects
-    start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
-    end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
-
+    start_date = parse(request.GET.get('start_date'))
+    end_date = parse(request.GET.get('end_date'))
+    
+    end_date = start_date + relativedelta(years=1)
+    
+    # Format the dates
+    start_date_str = start_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+    
+    print(start_date_str, end_date_str)
+    
     # Construct export_identifier
-    export_identifier = f"min_lat={min_lat}_min_lon={min_lon}_max_lat={max_lat}_max_lon={max_lon}_dates={start_date}_{end_date}_all"
+    export_identifier = f"min_lat={min_lat}_min_lon={min_lon}_max_lat={max_lat}_max_lon={max_lon}_dates={start_date_str}_{end_date_str}_all"
 
     # Create DataFrame
     private_labels = pd.DataFrame({

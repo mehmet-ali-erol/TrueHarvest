@@ -36,9 +36,9 @@ const farmSchema = new mongoose.Schema({
 
     coordinates: [{ type: [Number], required: true }],
     
-    ndviData: { type: Object, required: true },
+    ndviData: { type: Object, required: false },
 
-    prediction: { type: [[Number]], required: true },
+    prediction: { type: [[Number]], required: false },
 
   });
 

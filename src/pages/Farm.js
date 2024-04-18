@@ -111,58 +111,28 @@ const Farm = () => {
     }
   }, [loading]);
 
-  useEffect(() => {
-    const fetchAnalysisResult = async () => {
-      try {
-        // Extract the necessary parameters from farmDetails
-        if (!userEmail || !selectedFarm) {
-          // If userEmail or selectedFarm is not available, don't proceed with the fetch
-          return;
-        }
-
-        // Fetch farm details based on userEmail and selectedFarm
-        const response = await fetch(`http://localhost:3002/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
-
-        if (!response.ok) {
-          throw new Error(`Request failed with status: ${response.status}`);
-        }
-
-        const farmDetails = await response.json();
-        const sowingTime = farmDetails.sowtime;
-        const harvestTime = farmDetails.expectedharvesttime;
-        const coordinates = farmDetails.coordinates;
-
-        // Call sendAnalysisRequest function
-        const analysisResult = await sendNdviAnalysisRequest({ sowingTime, harvestTime, coordinates });
-
-        // Send analysisResult to /saveNdviValues endpoint
-        const ndvi_response = await fetch('http://localhost:3002/farmrouter/saveNdviValues', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userEmail: userEmail,
-            selectedFarm: selectedFarm,
-            ndviData: analysisResult,
-          }),
-        });
-
-        if (!ndvi_response.ok) {
-          throw new Error(`Request failed with status: ${ndvi_response.status}`);
-        }
-        console.log(analysisResult);
-
-      } catch (error) {
-        console.error('Error:', error.message);
-      }
-    };
-
-    if (!loading && !loaded) {
-      setLoaded(true);
-      fetchAnalysisResult();
+  async function sendAnalysisAndSaveValues({ sowingTime, harvestTime, coordinates, userEmail, selectedFarm }) {
+    // Call sendAnalysisRequest function
+    const analysisResult = await sendNdviAnalysisRequest({ sowingTime, harvestTime, coordinates });
+  
+    // Send analysisResult to /saveNdviValues endpoint
+    const ndvi_response = await fetch('http://localhost:3002/farmrouter/saveNdviValues', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userEmail: userEmail,
+        selectedFarm: selectedFarm,
+        ndviData: analysisResult,
+      }),
+    });
+  
+    if (!ndvi_response.ok) {
+      throw new Error(`Request failed with status: ${ndvi_response.status}`);
     }
-  }, [loading, loaded]);
+    console.log(analysisResult);
+  }
 
   async function sendNdviAnalysisRequest(data) {
     const { sowingTime, harvestTime, coordinates } = data;
@@ -186,7 +156,6 @@ const Farm = () => {
         throw new Error(`Request failed with status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       console.error('Error:', error);
@@ -216,39 +185,6 @@ const Farm = () => {
       console.error('Error:', error.message);
     }
   };
-
-  const sendAnalysisRequest = async (url, data) => {
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data }),
-      });
-      console.log(data)
-      if (!response.ok) {
-        throw new Error(`Request failed with status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error:', error.message);
-    }
-  }
-
-  function getMinMaxCoordinates(coordinates) {
-    const longitudes = coordinates.map(coordinate => coordinate[1]);
-    const latitudes = coordinates.map(coordinate => coordinate[0]);
-
-    const minLongitude = Math.min(...longitudes);
-    const maxLongitude = Math.max(...longitudes);
-    const minLatitude = Math.min(...latitudes);
-    const maxLatitude = Math.max(...latitudes);
-
-    return [{ min_lat: minLatitude, max_lat: maxLatitude }, { min_lon: minLongitude, max_lon: maxLongitude }];
-  }
 
   const handleSaveFarmName = async () => {
     const result = await sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName);
@@ -312,6 +248,7 @@ const Farm = () => {
     console.log(selectedFarm);
     console.log(currentCropType);
 
+
     if (currentCropType) {
       try {
         const response = await fetch('http://localhost:3002/farmrouter/deletecroptype', {
@@ -370,13 +307,17 @@ const Farm = () => {
       await handleAddCropType();
       await handleDeleteCropType();
 
+      sendAnalysisAndSaveValues
+      ({
+        sowingTime: formData.sowTime,
+        harvestTime: formData.expectedHarvestTime,
+        coordinates: coordinates,
+        userEmail: userEmail,
+        selectedFarm: selectedFarm
+      });
+
       alert('Field information updated successfully');
 
-      sendAnalysisRequest('http://localhost:3002/analysisrouter/getanalysis', {
-        sowTime: formData.sowTime,
-        harvestTime: formData.expectedHarvestTime,
-        coordinates: getMinMaxCoordinates(coordinates),
-      });
     } catch (error) {
       console.error(error);
       alert('An error occurred while updating field information');
@@ -390,12 +331,12 @@ const Farm = () => {
       <Container className="main-container">
         <Link to="/analysis">
           <Button variant="dark" size="lg" className="mb-3 mr-2">
-            Chart
+            Graph
           </Button>
         </Link>
         <Link to="/farm">
           <Button type="analysis" variant="success" size="lg" className="mb-3">
-            Analysis
+            Information
           </Button>
         </Link>
         <Button type="Delete" variant="danger" size="lg" onClick={handleDeleteFarm}>
