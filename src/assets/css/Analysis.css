@@ -1,30 +1,60 @@
 .container-fluid {
-    display: flex;
-    flex-direction: column;
-    
+display: flex;
+flex-direction: column;
+
 }
 
 .content-charts {
-    display: flex;
-    flex-grow: 1;
-    padding: 60px;
+display: flex;
+flex-grow: 1;
+padding: 60px;
 }
 
 .container {
-    flex-grow: 1;
+flex-grow: 1;
 }
 
 .chart-container {
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    height: 300px;
-    width: 500px;
+margin: auto;
+display: flex;
+justify-content: center;
+height: 300px;
+width: 500px;
 }
 
 .content-charts button[type="top-button"]{
-    width: 140px;
-    height: 50px;
-    margin-right: 10px;
-    float: right;
+width: 140px;
+height: 50px;
+margin-right: 10px;
+float: right;
+}
+
+.btn-lg-text {
+font-size: 1rem; /* Adjust as needed */
+}
+
+.heatmap-prediction {
+width: 150%;
+height: 100%;
+}
+
+
+.heatmap-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .heatmap-title {
+    margin-top: 10px;  
+    font-size: 20px;
+    font-weight: bold;
+  }
+.spin-prediction{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    color: red;
 }
