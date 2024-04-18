@@ -98,7 +98,7 @@ const Analysis = () => {
 
   const renderHeatmap = () => {
     if (isLoading) {
-      return <Spin className= "spin-prediction" size="large"/>;
+      return <Spin className="spin-prediction" size="large" />;
     }
     if (!farmCoordinates || !predictionData || !predictionData.prediction_rate) {
       return (
@@ -107,6 +107,10 @@ const Analysis = () => {
             xLabels={['1', '2', '3']}
             yLabels={['A', 'B', 'C']}
             data={[[1, 2, 3], [4, 5, 6], [7, 8, 9]]}
+            cellStyle={(background, value, min, max, data, x, y) => ({
+              background: `rgba(${255 * (1 - (value - min) / (max - min))}, ${200 + 55 * (value - min) / (max - min)}, 0, ${1 - (max - value) / (max - min)})`,
+              fontSize: "11px",
+            })}
           />
         </div>
       );
@@ -124,12 +128,11 @@ const Analysis = () => {
             data={predictionData.prediction_rate}
             yLabelWidth={100} // Adjust label width to add space
             cellStyle={(background, value, min, max, data, x, y) => ({
-              background: `rgba(${255 * (1 - (value - min) / (max - min))}, 255, 0, ${1 - (max - value) / (max - min)})`,
+              background: `rgba(${255 * (1 - (value - min) / (max - min))}, ${200 + 55 * (value - min) / (max - min)}, 0, ${1 - (max - value) / (max - min)})`,
               fontSize: "11px",
             })}
             cellRender={(value) => value && `${value.toFixed(2)}`}
-            title={(value, unit) => `${value}`}
-            />
+          />
         </div>
       </div>
     );
@@ -218,17 +221,15 @@ const Analysis = () => {
             <div className="row mt-2">
               <div className="d-grid gap-2 d-md-flex justify-content-md-start">
                 {view === 'prediction' && (
-                  <div>
-                    <button
-                      className="btn btn-dark btn-lg btn-lg-text"
-                      type="top-button"
-                      onMouseOver={(e) => e.currentTarget.classList.replace('btn-dark', 'btn-success')}
-                      onMouseOut={(e) => e.currentTarget.classList.replace('btn-success', 'btn-dark')}
-                      onClick={handlePrediction}
-                    >
-                      Get Prediction
-                    </button>
-                  </div>
+                  <button
+                    className="btn btn-dark btn-lg btn-lg-text"
+                    type="top-button"
+                    onMouseOver={(e) => e.currentTarget.classList.replace('btn-dark', 'btn-success')}
+                    onMouseOut={(e) => e.currentTarget.classList.replace('btn-success', 'btn-dark')}
+                    onClick={handlePrediction}
+                  >
+                    Get Prediction
+                  </button>
                 )}
               </div>
             </div>
