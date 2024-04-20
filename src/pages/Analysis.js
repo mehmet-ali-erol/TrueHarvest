@@ -93,14 +93,15 @@ const Analysis = () => {
       const indexInSecondData = secondLabels.indexOf(month);
 
       if (indexInSecondData !== -1) {
+        console.log("indexInSecondData", secondData[indexInSecondData]);
         totalDifference += Math.abs(firstData[i] - secondData[indexInSecondData]);
         commonMonthsCount++;
       }
     }
 
     const averageDifference = totalDifference / commonMonthsCount;
-
-    return averageDifference;
+    const averageSimilarity = 1 - averageDifference;
+    return averageSimilarity;
   }
 
   const firstChartData = {
