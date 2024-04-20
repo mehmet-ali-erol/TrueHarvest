@@ -123,8 +123,8 @@ const Analysis = () => {
         <div className="heatmap-title">Latitude vs Longtitude Graph</div>
         <div className="heatmap-prediction">
           <HeatMap
-            xLabels={farmCoordinates.map(coord => Number(coord[0]).toFixed(2))} // lat values
-            yLabels={farmCoordinates.map(coord => Number(coord[1]).toFixed(2))} // lon values
+            xLabels={farmCoordinates.map(coord => Number(coord[0]).toFixed(4))} // lat values
+            yLabels={farmCoordinates.map(coord => Number(coord[1]).toFixed(4))} // lon values
             data={predictionData.prediction_rate}
             yLabelWidth={100} // Adjust label width to add space
             cellStyle={(background, value, min, max, data, x, y) => ({
