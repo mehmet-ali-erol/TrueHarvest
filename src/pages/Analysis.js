@@ -18,13 +18,11 @@ const Analysis = () => {
   const [view, setView] = useState('chart');
   const { selectedFarm } = useUser();
   const { userEmail } = useUser();
-  const chartRef = useRef(null);
   const [farmCoordinates, setFarmCoordinates] = useState();
   const [predictionData, setPredictionData] = useState();
-  const [chartData, setChartData] = useState(null);
+  const [secondChartData, setSecondChartData] = useState();
   const [dataLoaded, setDataLoaded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   useEffect(() => {
@@ -55,11 +53,11 @@ const Analysis = () => {
         const ndviData = await ndviResponse.json();
         if (ndviData && Array.isArray(ndviData.ndviData)) {
           // Update chartData using the setChartData function
-          setChartData({
+          setSecondChartData({
             labels: ndviData.ndviData.map(data => monthNames[data.month - 1]),
             datasets: [
               {
-                label: 'NDVI',
+                label: 'Your NDVI',
                 data: ndviData.ndviData.map(data => data.mean),
                 fill: false,
                 borderColor: 'rgb(75, 192, 192)',
@@ -68,9 +66,6 @@ const Analysis = () => {
             ],
           });
         }
-        const labels = ndviData.ndviData.map(data => `Month ${data.month}`);
-        console.log(chartData)
-        console.log(labels);
         setDataLoaded(true);
 
       } catch (error) {
@@ -81,19 +76,72 @@ const Analysis = () => {
     initializeAnalysis();
   }, []);
 
+  function calculateMatchRate(firstChartData) {
+    const firstData = firstChartData.datasets[0].data;
+    console.log("First Data", firstData);
+    console.log("Second Chart Data", secondChartData.datasets[0].data);
+    const secondData = secondChartData.datasets[0].data;
+    console.log("Second Data", secondData);
+    const firstLabels = firstChartData.labels;
+    const secondLabels = secondChartData.labels;
+
+    let totalDifference = 0;
+    let commonMonthsCount = 0;
+
+    for (let i = 0; i < firstLabels.length; i++) {
+      const month = firstLabels[i];
+      const indexInSecondData = secondLabels.indexOf(month);
+
+      if (indexInSecondData !== -1) {
+        totalDifference += Math.abs(firstData[i] - secondData[indexInSecondData]);
+        commonMonthsCount++;
+      }
+    }
+
+    const averageDifference = totalDifference / commonMonthsCount;
+
+    return averageDifference;
+  }
+
+  const firstChartData = {
+    labels: monthNames,
+    datasets: [
+      {
+        label: 'Average NDVI',
+        data: [0.658, 0.625, 0.668, 0.513, 0.598, 0.227, 0.097, 0.055, 0.274, 0.592, 0.785, 0.686],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+      },
+    ],
+  };
 
   const renderChart = () => {
     switch (chartType) {
       case 'line':
-        return <div className="chart-container"><Line data={chartData} /></div>;
+        return <div className="chart-container"><Line data={secondChartData} /></div>;
       case 'bar':
-        return <div className="chart-container"><Bar data={chartData} /></div>;
+        return <div className="chart-container"><Bar data={secondChartData} /></div>;
       case 'pie':
-        return <div className="chart-container"><Pie data={chartData} /></div>;
+        return <div className="chart-container"><Pie data={secondChartData} /></div>;
       default:
-        return <div className="chart-container"><Line data={chartData} /></div>;
+        return <div className="chart-container"><Line data={secondChartData} /></div>;
     }
   }
+
+  const renderFirstChart = () => {
+    switch (chartType) {
+      case 'line':
+        return <div className="chart-container"><Line data={firstChartData} /></div>;
+      case 'bar':
+        return <div className="chart-container"><Bar data={firstChartData} /></div>;
+      case 'pie':
+        return <div className="chart-container"><Pie data={firstChartData} /></div>;
+      default:
+        return <div className="chart-container"><Line data={firstChartData} /></div>;
+    }
+  }
+
 
 
   const renderHeatmap = () => {
@@ -268,7 +316,7 @@ const Analysis = () => {
           <div className="row mt-4 justify-content-center">
             {view !== 'prediction' && (
               <div className="col-md-6">
-                {dataLoaded && renderContent()}
+                {dataLoaded && renderFirstChart()}
               </div>
             )}
             <div className="col-md-6">
@@ -276,12 +324,16 @@ const Analysis = () => {
             </div>
           </div>
           <div className="row mt-4 justify-content-center">
-            {view === 'chart' && (
+            {view === 'chart' && firstChartData && secondChartData && (
               <div className="text-center">
-                <h2>Graph Information</h2>
+                <h2> Graph Information </h2>
                 <div className="d-flex align-items-center">
-                  <label className="me-3 ms-3">Match rate of charts:</label>
-                  <div className="border rounded p-2" style={{ width: '80%', height: '30px' }}></div>
+                  <label className="me-3 ms-3 mt-2">Match rate of charts: </label>
+                  <div className="border rounded p-2" style={{ width: '80%' }}>
+                    <span style={{ marginRight: '10%' }}>
+                      {`${(calculateMatchRate(firstChartData, secondChartData) * 100).toFixed(2)}%`}
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
