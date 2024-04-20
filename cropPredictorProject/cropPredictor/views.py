@@ -22,9 +22,7 @@ ee.Initialize(project='ee-truharvest')
 BASE_DIR = os.path.dirname(CURRENT_FILE_DIR)
 
 
-
 # Now you can use BASE_DIR to construct paths to other directories within your project
-
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(BASE_DIR, 'fine-jetty-417618-968bb48225bc.json')
 google_cloud_exporter = EarthEngineExporter(dest_bucket="truecropharvest")
