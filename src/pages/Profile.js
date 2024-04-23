@@ -77,29 +77,29 @@ const Profile = () => {
                             <img class="rounded-circle" src={Image} alt="Profile" style={{ marginBottom: '59px', width: '80%', height: '80%', objectFit: 'cover', border: '2px solid #000' }} />
                         </div>
                         <Form className="form-profile">
-                            <Form.Group as={Row} controlId="formFieldName" className="mb-3">
+                            <Form.Group as={Row} controlId="formFieldName">
                                 <Form.Label column sm="2">
                                     Username
                                 </Form.Label>
                                 <Col sm="7">
-                                    <Form.Control type="text" placeholder="Enter a new username" value={userName} onChange={(e) => setUserName(e.target.value)}/>
+                                    <Form.Control placeholder="Enter a new username" value={userName} onChange={(e) => setUserName(e.target.value)}/>
                                 </Col>
                                 <Col sm="2">
-                                    <Button variant="success" size="lg"  onClick={handleChangeUserName}>
+                                    <Button variant="success" size="lg" style={{ marginTop: '-1px' }} onClick={handleChangeUserName}>
                                         Update
                                     </Button>
                                 </Col>
                             </Form.Group>
 
-                            <Form.Group as={Row} controlId="formCropType" className="mb-3">
+                            <Form.Group as={Row} controlId="formCropType">
                                 <Form.Label column sm="2">
                                     New Password
                                 </Form.Label>
                                 <Col sm="7">
-                                    <Form.Control type="text" placeholder="Enter new password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                                    <Form.Control placeholder="Enter new password"  value={password} onChange={(e) => setPassword(e.target.value)} />
                                 </Col>
                                 <Col sm="2">
-                                    <Button variant="success" size="lg" onClick={handleChangePassword}>
+                                    <Button variant="success" size="lg" style={{ marginTop: '-1px' }} onClick={handleChangePassword}>
                                         Update
                                     </Button>
                                 </Col>
