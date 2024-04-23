@@ -114,7 +114,7 @@ const Farm = () => {
   async function sendAnalysisAndSaveValues({ sowingTime, harvestTime, coordinates, userEmail, selectedFarm }) {
     // Call sendAnalysisRequest function
     const analysisResult = await sendNdviAnalysisRequest({ sowingTime, harvestTime, coordinates });
-  
+
     // Send analysisResult to /saveNdviValues endpoint
     const ndvi_response = await fetch('http://localhost:3002/farmrouter/saveNdviValues', {
       method: 'POST',
@@ -127,7 +127,7 @@ const Farm = () => {
         ndviData: analysisResult,
       }),
     });
-  
+
     if (!ndvi_response.ok) {
       throw new Error(`Request failed with status: ${ndvi_response.status}`);
     }
@@ -308,13 +308,13 @@ const Farm = () => {
       await handleDeleteCropType();
 
       sendAnalysisAndSaveValues
-      ({
-        sowingTime: formData.sowTime,
-        harvestTime: formData.expectedHarvestTime,
-        coordinates: coordinates,
-        userEmail: userEmail,
-        selectedFarm: selectedFarm
-      });
+        ({
+          sowingTime: formData.sowTime,
+          harvestTime: formData.expectedHarvestTime,
+          coordinates: coordinates,
+          userEmail: userEmail,
+          selectedFarm: selectedFarm
+        });
 
       alert('Field information updated successfully');
 
@@ -439,13 +439,13 @@ const Farm = () => {
               </Col>
             </Form.Group>
 
-            <Form.Group as={Row} controlId="formUpdateButton" className="mb-3 mr-0">
-              <Col sm="11" className="d-flex justify-content-end" >
-                <Button variant="success" size="lg" onClick={handleUpdateFieldInformation}>
+            <div className="form-group row mb-3">
+              <div className="col d-flex justify-content-end">
+                <button className="btn btn-success btn-lg" style={{ marginRight: '85px' }} onClick={handleUpdateFieldInformation}>
                   Update
-                </Button>
-              </Col>
-            </Form.Group>
+                </button>
+              </div>
+            </div>
           </Form>
 
         </Container>
