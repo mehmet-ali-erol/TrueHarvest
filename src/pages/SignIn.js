@@ -12,6 +12,7 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState(null);
+  const [authenticated, setAuthenticated] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useUser();
 
@@ -71,6 +72,7 @@ const SignIn = () => {
         console.log('Google Sign-In successful. User data retrieved in the backend.');
         // Handle user session setup or redirection here
         setUser(email);
+        setAuthenticated(true); // Set authenticated state to true
         navigate('/start-screen');
       } else {
         setError('Google Sign-In failed. Please try again.');
@@ -86,7 +88,7 @@ const SignIn = () => {
     <Container className="signin-container">
       <Row>
         <Col xs={6} md={6} className="signin-image">
-        <img src={logo} alt="TrueHarvest" style={{width: '550px', height: '550px'}} />
+          <img src={logo} alt="TrueHarvest" style={{ width: '550px', height: '550px' }} />
         </Col>
         <Col xs={6} md={6} className="signin-form">
           <Form>
@@ -120,9 +122,11 @@ const SignIn = () => {
             <div className="d-grid gap-2">
               <GoogleLogin
                 clientId="70752464639-fl6jrttqq6rkoeb90dqdtl8v3k7l2f2d.apps.googleusercontent.com"
+                width="360px"
+                text='signin_with'
+                theme='filled'
                 onSuccess={handleGoogleSignin}
               />
-
             </div>
             <p className="mt-3">
               You do not have an account?{' '}
