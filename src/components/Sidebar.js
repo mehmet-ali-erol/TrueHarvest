@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../assets/css/Sidebar.css';
 import { useUser } from '../UserContext';
 import FarmCard from './FarmCard';
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const Sidebar = ({ flyToFarmLocation }) => {
   const { userEmail } = useUser();
@@ -10,7 +12,7 @@ const Sidebar = ({ flyToFarmLocation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
+        const response = await fetch(`${serverHost}/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
         if (response.ok) {
           const data = await response.json();
           setFarmData(data);

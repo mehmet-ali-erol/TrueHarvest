@@ -9,6 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw';
 const booleanPointInPolygon = require('@turf/turf').booleanPointInPolygon;
+const serverHost = process.env.REACT_APP_SERVER_HOST;
 
 const MapMyFarms = () => {
   // Current user email
@@ -33,7 +34,7 @@ const MapMyFarms = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
+      const response = await axios.get(`${serverHost}/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);

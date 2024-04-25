@@ -11,6 +11,8 @@ require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
 require('../assets/css/MapAddFarm.css');
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const MapAddFarmSelect = () => {
   const [dropdown1, setDropdown1] = useState('');
@@ -43,8 +45,8 @@ const MapAddFarmSelect = () => {
     try {
       // Conditionally include parent ID in the URL if it is not null
       const url = parentId
-        ? `http://localhost:3002/${type}/${parentId}`
-        : `http://localhost:3002/${type}`;
+        ? `${serverHost}/${type}/${parentId}`
+        : `${serverHost}/${type}`;
         const response = await axios.get(url);
         console.log(response.data);
         const options = response.data; // Assuming the response directly contains an array of cities, districts, etc.
@@ -106,7 +108,7 @@ const MapAddFarmSelect = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
+      const response = await axios.get(`${serverHost}/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
@@ -269,7 +271,7 @@ const MapAddFarmSelect = () => {
         map.on('click', async (e) => {
           const clickedPoint = [e.latlng.lat, e.latlng.lng];
             try {
-              const response = await axios.get(`http://localhost:3002/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
+              const response = await axios.get(`${serverHost}/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
               const coordinates = response.data.geometry.coordinates[0];
               await coordinates.forEach(function (coordinate) {
                 coordinate.reverse();
@@ -317,7 +319,7 @@ const MapAddFarmSelect = () => {
                     fetchedFarmsCoordiantesRef.current.push(pcoordinates);
                     sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantesRef.current));
                   
-                    fetch('http://localhost:3002/maprouter/registerfarm', {
+                    fetch(`${serverHost}/maprouter/registerfarm`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
@@ -380,7 +382,7 @@ const MapAddFarmSelect = () => {
             fetchedFarmsCoordiantesRefP.current.push(pcoordinates);
             sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantesRefP.current));
           
-            fetch('http://localhost:3002/maprouter/registerfarm', {
+            fetch(`${serverHost}/maprouter/registerfarm`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -428,7 +430,7 @@ const MapAddFarmSelect = () => {
         return;
       }
   
-      const response = await axios.get(`http://localhost:3002/fetchParcel/${dropdown3}/${textField1}/${textField2}`);
+      const response = await axios.get(`${serverHost}/fetchParcel/${dropdown3}/${textField1}/${textField2}`);
       const coordinates = response.data.geometry.coordinates[0];
       coordinates.forEach(function (coordinate) {
         coordinate.reverse();

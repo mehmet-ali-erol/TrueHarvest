@@ -9,8 +9,8 @@ import { scaleLinear } from 'd3-scale';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartLine, faChartBar, faChartPie } from '@fortawesome/free-solid-svg-icons';
 import { Spin } from 'antd'; // Assuming you're using Ant Design for UI components
-
 import '../assets/css/Analysis.css'; // Make sure to adjust the path according to your project structure
+const serverHost = process.env.REACT_APP_SERVER_HOST;
 
 const Analysis = () => {
 
@@ -34,7 +34,7 @@ const Analysis = () => {
           return;
         }
         // Fetch farm details based on userEmail and selectedFarm
-        const response = await fetch(`http://localhost:3002/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+        const response = await fetch(`${serverHost}/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
 
         if (!response.ok) {
           throw new Error(`Request failed with status: ${response.status}`);
@@ -44,7 +44,7 @@ const Analysis = () => {
         setFarmCoordinates(farmDetails.coordinates);
 
         // Fetch NDVI values from /getNdviValues endpoint
-        const ndviResponse = await fetch(`http://localhost:3002/farmrouter/getNdviValues?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+        const ndviResponse = await fetch(`${serverHost}/farmrouter/getNdviValues?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
 
         if (!ndviResponse.ok) {
           throw new Error(`Request failed with status: ${ndviResponse.status}`);
@@ -205,7 +205,7 @@ const Analysis = () => {
   async function handlePrediction() {
     setIsLoading(true);
     // Fetch farm details based on userEmail and selectedFarm
-    const response = await fetch(`http://localhost:3002/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+    const response = await fetch(`${serverHost}/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
 
     if (!response.ok) {
       throw new Error(`Request failed with status: ${response.status}`);
@@ -217,7 +217,7 @@ const Analysis = () => {
     const harvestTime = farmDetails.expectedharvesttime;
     const coordinates = farmDetails.coordinates;
 
-    const responsePrediction = await fetch('http://localhost:3002/farmrouter/getPrediction', {
+    const responsePrediction = await fetch(`${serverHost}/farmrouter/getPrediction`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

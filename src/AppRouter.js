@@ -15,13 +15,7 @@ const { useEffect, useState } = require('react');
 const { Routes, Route, Navigate } = require('react-router-dom');
 export default function AppRouter() {
   const [data, setData] = useState([]);
-  // useEffect(() => {
-  //   // Fetch data from the server
-  //   fetch('http://localhost:3000/api/data')
-  //     .then(response => response.json())
-  //     .then(data => setData(data))
-  //     .catch(error => console.error('Error fetching data:', error));
-  // }, []);
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/signin" />} />

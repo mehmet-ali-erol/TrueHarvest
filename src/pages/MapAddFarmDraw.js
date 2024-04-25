@@ -10,6 +10,8 @@ require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
 require('../assets/css/MapAddFarm.css');
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const MapDraw = () => {
   // Current user email
@@ -29,7 +31,7 @@ const MapDraw = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
+      const response = await axios.get(`${serverHost}/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
@@ -217,7 +219,7 @@ const MapDraw = () => {
               fetchedFarmsCoordiantes.push(coordinates);
               sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
               try {
-                const response = await fetch('http://localhost:3002/maprouter/registerfarm', {
+                const response = await fetch(`${serverHost}/maprouter/registerfarm`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',

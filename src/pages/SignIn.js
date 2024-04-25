@@ -6,6 +6,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import logo from '../assets/img/long_logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/SignIn.css';
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -25,7 +27,7 @@ const SignIn = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:3002/auth/signin', {
+      const response = await fetch(`${serverHost}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +61,7 @@ const SignIn = () => {
       console.log('token:', decodedToken);
 
       // Ideally, send the credential (ID token) to your backend for verification
-      const backendResponse = await fetch('http://localhost:3002/auth/google-signin', {
+      const backendResponse = await fetch(`${serverHost}/auth/google-signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +123,7 @@ const SignIn = () => {
             <br></br>
             <div className="d-grid gap-2">
               <GoogleLogin
-                clientId="70752464639-fl6jrttqq6rkoeb90dqdtl8v3k7l2f2d.apps.googleusercontent.com"
+                clientId={clientId}
                 width="360px"
                 text='signin_with'
                 theme='filled'

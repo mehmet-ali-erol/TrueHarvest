@@ -5,6 +5,8 @@ const { Container, Row, Col, Form, Button } = require('react-bootstrap');
 const { Link, useNavigate } = require('react-router-dom');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('../assets/css/SignUp.css');
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -42,7 +44,7 @@ const SignUp = () => {
       };
 
       // Make an HTTP POST request to your backend
-      const response = await fetch('http://localhost:3002/auth/register', {
+      const response = await fetch(`${serverHost}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

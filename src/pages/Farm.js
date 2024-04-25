@@ -9,6 +9,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/Farm.css';
 import center from '@turf/center';
 import Header from '../components/Header';
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const Farm = () => {
   const { selectedFarm } = useUser();
@@ -51,7 +53,7 @@ const Farm = () => {
           }
 
           // Fetch farm details based on userEmail and selectedFarm
-          const response = await fetch(`http://localhost:3002/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+          const response = await fetch(`${serverHost}/farmrouter/getfarmdetails?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
 
           if (!response.ok) {
             throw new Error(`Request failed with status: ${response.status}`);
@@ -116,7 +118,7 @@ const Farm = () => {
     const analysisResult = await sendNdviAnalysisRequest({ sowingTime, harvestTime, coordinates });
 
     // Send analysisResult to /saveNdviValues endpoint
-    const ndvi_response = await fetch('http://localhost:3002/farmrouter/saveNdviValues', {
+    const ndvi_response = await fetch(`${serverHost}/farmrouter/saveNdviValues`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -136,7 +138,7 @@ const Farm = () => {
 
   async function sendNdviAnalysisRequest(data) {
     const { sowingTime, harvestTime, coordinates } = data;
-    const url = 'http://localhost:3002/farmrouter/statistics'; // replace with your server URL
+    const url = `${serverHost}/farmrouter/statistics`; // replace with your server URL
     const requestBody = {
       sowingTime,
       harvestTime,
@@ -187,7 +189,7 @@ const Farm = () => {
   };
 
   const handleSaveFarmName = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName);
+    const result = await sendRequest(`${serverHost}/farmrouter/savefarmname`, formData.fieldName);
 
     if (result && result.success) {
     } else {
@@ -196,7 +198,7 @@ const Farm = () => {
   };
 
   const handleSaveFarmAddress = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress);
+    const result = await sendRequest(`${serverHost}/farmrouter/savefarmaddress`, formData.fieldAddress);
 
     if (result && result.success) {
     } else {
@@ -205,7 +207,7 @@ const Farm = () => {
   };
 
   const handleAddCropType = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType);
+    const result = await sendRequest(`${serverHost}/farmrouter/addcroptype`, formData.cropType);
 
     if (result && result.success) {
     } else {
@@ -215,7 +217,7 @@ const Farm = () => {
   };
 
   const handleSaveSowTime = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime);
+    const result = await sendRequest(`${serverHost}/farmrouter/savesowtime`, formData.sowTime);
 
     if (result && result.success) {
     } else {
@@ -224,7 +226,7 @@ const Farm = () => {
   };
 
   const handleSaveExpectedHarvestTime = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime', formData.expectedHarvestTime);
+    const result = await sendRequest(`${serverHost}/farmrouter/saveexpectedharvesttime`, formData.expectedHarvestTime);
 
     if (result && result.success) {
     } else {
@@ -233,7 +235,7 @@ const Farm = () => {
   };
 
   const handleDeleteFarm = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/deletefarm', formData.fieldName);
+    const result = await sendRequest(`${serverHost}/farmrouter/deletefarm`, formData.fieldName);
 
     if (result && result.success) {
       navigate('/main');
@@ -251,7 +253,7 @@ const Farm = () => {
 
     if (currentCropType) {
       try {
-        const response = await fetch('http://localhost:3002/farmrouter/deletecroptype', {
+        const response = await fetch(`${serverHost}/farmrouter/deletecroptype`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -286,7 +288,7 @@ const Farm = () => {
 
   const fetchCropTypes = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/farmrouter/getcroptypes?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
+      const response = await fetch(`${serverHost}/farmrouter/getcroptypes?userEmail=${userEmail}&selectedFarm=${selectedFarm}`);
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
