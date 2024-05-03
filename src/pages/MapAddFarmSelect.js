@@ -11,6 +11,8 @@ require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
 require('../assets/css/MapAddFarm.css');
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const MapAddFarmSelect = () => {
   const [dropdown1, setDropdown1] = useState('');
@@ -43,8 +45,8 @@ const MapAddFarmSelect = () => {
     try {
       // Conditionally include parent ID in the URL if it is not null
       const url = parentId
-        ? `http://localhost:3002/${type}/${parentId}`
-        : `http://localhost:3002/${type}`;
+        ? `${serverHost}/${type}/${parentId}`
+        : `${serverHost}/${type}`;
         const response = await axios.get(url);
         console.log(response.data);
         const options = response.data; // Assuming the response directly contains an array of cities, districts, etc.
@@ -106,7 +108,7 @@ const MapAddFarmSelect = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
+      const response = await axios.get(`${serverHost}/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
@@ -252,6 +254,94 @@ const MapAddFarmSelect = () => {
             const longitude = parseFloat(form.querySelector('#longitude').value);
             if (!isNaN(latitude) && !isNaN(longitude)) {
               map.setView([latitude, longitude], 15);
+              (async () => {
+                const clickedPoint = [latitude, longitude];
+                try {
+                  const response = await axios.get(`${serverHost}/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
+                  const coordinates = response.data.geometry.coordinates[0];
+                  await coordinates.forEach(function (coordinate) {
+                    coordinate.reverse();
+                  })
+              
+                  if (!coordinates) {
+                    console.error('Invalid response format or missing coordinates.');
+                    return;
+                  }
+                  const pcoordinates = coordinates;
+                  let availablecoordinate = true;
+              
+                  for (const farm of fetchedFarmsCoordiantesRef.current) {
+                    // Convert the existing polygon to a GeoJSON object
+                    const existingPolygonGeoJSON = turfPolygon([farm]);
+              
+                    // Check if the new polygon contains any point of the existing polygon
+                    const containsPoint = booleanPointInPolygon(clickedPoint, existingPolygonGeoJSON);
+              
+                    if (containsPoint) {
+                      // If the point is inside the existing polygon, the new polygon overlaps
+                      alert('The selected field overlaps with an existing field.');
+                      availablecoordinate = false;
+                    }
+                  }
+              
+                  if (availablecoordinate) {
+                    // Draw the polygon on the map
+                    const polygon = L.polygon(pcoordinates, { color: 'blue' });
+                    drawnItems.addLayer(polygon);
+              
+                    // Smoothly animate the map to fit the bounds of the polygon
+                    map.flyToBounds(polygon.getBounds(), { duration: 1.5, easeLinearity: 0.5 });
+                    map.on('move', reRenderFunction)
+                    setTimeout(() => {
+                      map.off('move', reRenderFunction);
+                    }, 1500);
+              
+                    // Delay the confirmation prompt to ensure it appears after the animation
+                    setTimeout(() => {
+                      // Display confirmation prompt
+                      const confirmed = window.confirm('Do you want to confirm the area of the drawn farm?');
+              
+                      if (confirmed) {
+                        fetchedFarmsCoordiantesRef.current.push(pcoordinates);
+                        sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantesRef.current));
+              
+                        fetch(`${serverHost}/maprouter/registerfarm`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ coordinates: pcoordinates, email: userEmail }),
+                        })
+                          .then((response) => response.json())
+                          .then((responseData) => {
+                            if (responseData && responseData.id) {
+                              const farmId = responseData.id;
+              
+                              fetchedFarmsIDsRef.current.push(farmId);
+                              sessionStorage.setItem('farmids', JSON.stringify(fetchedFarmsIDsRef.current));
+              
+                              console.log('Coordinates successfully sent to the server');
+                              polygon.setStyle({ color: 'yellow' });
+                            } else {
+                              console.error('Failed to send coordinates to the server:', responseData);
+                            }
+              
+                          })
+                          .catch((error) => {
+                            console.error('Error sending coordinates:', error);
+                            drawnItems.removeLayer(polygon);
+                          });
+                      } else {
+                        // Remove the layer if not confirmed
+                        drawnItems.removeLayer(polygon);
+                      }
+                    }, 2500);
+                  }
+                } catch (error) {
+                  alert('There is no registered parcel at the specified location.');
+                }
+              })();
+              
             } else {
               alert('Please enter valid coordinates');
             }
@@ -269,7 +359,7 @@ const MapAddFarmSelect = () => {
         map.on('click', async (e) => {
           const clickedPoint = [e.latlng.lat, e.latlng.lng];
             try {
-              const response = await axios.get(`http://localhost:3002/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
+              const response = await axios.get(`${serverHost}/fetchLocationByPoint/${clickedPoint[0]}/${clickedPoint[1]}`);
               const coordinates = response.data.geometry.coordinates[0];
               await coordinates.forEach(function (coordinate) {
                 coordinate.reverse();
@@ -317,7 +407,7 @@ const MapAddFarmSelect = () => {
                     fetchedFarmsCoordiantesRef.current.push(pcoordinates);
                     sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantesRef.current));
                   
-                    fetch('http://localhost:3002/maprouter/registerfarm', {
+                    fetch(`${serverHost}/maprouter/registerfarm`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
@@ -380,7 +470,7 @@ const MapAddFarmSelect = () => {
             fetchedFarmsCoordiantesRefP.current.push(pcoordinates);
             sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantesRefP.current));
           
-            fetch('http://localhost:3002/maprouter/registerfarm', {
+            fetch(`${serverHost}/maprouter/registerfarm`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -428,7 +518,7 @@ const MapAddFarmSelect = () => {
         return;
       }
   
-      const response = await axios.get(`http://localhost:3002/fetchParcel/${dropdown3}/${textField1}/${textField2}`);
+      const response = await axios.get(`${serverHost}/fetchParcel/${dropdown3}/${textField1}/${textField2}`);
       const coordinates = response.data.geometry.coordinates[0];
       coordinates.forEach(function (coordinate) {
         coordinate.reverse();

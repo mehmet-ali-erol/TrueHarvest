@@ -10,6 +10,8 @@ require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet-draw');
 require('../assets/css/MapAddFarm.css');
+const serverHost = process.env.REACT_APP_SERVER_HOST;
+
 
 const MapDraw = () => {
   // Current user email
@@ -20,7 +22,6 @@ const MapDraw = () => {
   const mapRef = useRef(null);
   const [zoomCoordinates, setZoomCoordinates] = useState(null);
 
-
   let fetchedFarms;
   let fetchedFarmsCoordiantes;
   let fetchedFarmsIDs;
@@ -29,7 +30,7 @@ const MapDraw = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3002/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
+      const response = await axios.get(`${serverHost}/maprouter/getfarms?email=${encodeURIComponent(userEmail)}`);
       fetchedFarms = response.data;
       fetchedFarmsCoordiantes = fetchedFarms.map(farm => farm.coordinates);
       fetchedFarmsIDs = fetchedFarms.map(farm => farm._id);
@@ -126,55 +127,6 @@ const MapDraw = () => {
             drawnItems.addLayer(polygon);
           });
         }
-        
-        
-        const zoomToCoordinatesControl = L.control({ position: 'topleft' });
-        zoomToCoordinatesControl.onAdd = () => {
-          const zoomDiv = L.DomUtil.create('div', 'zoom-to-coordinates-control');
-          zoomDiv.innerHTML = `
-              <form id="zoomForm">
-              <div class="custom-input">
-                <label for="latitude"></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="latitude"
-                  placeholder="Latitude"
-                  required
-                />
-              </div>
-              <div class="custom-input">
-                <label for="longitude"></label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="longitude"
-                  placeholder="Longitude"
-                  required
-                />
-              </div>
-              <button type="submit" class="btn btn-primary">
-                Zoom
-              </button>
-            </form>
-          `;
-        
-          const form = zoomDiv.querySelector('#zoomForm');
-          form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const latitude = parseFloat(form.querySelector('#latitude').value);
-            const longitude = parseFloat(form.querySelector('#longitude').value);
-            if (!isNaN(latitude) && !isNaN(longitude)) {
-              map.setView([latitude, longitude], 15);
-            } else {
-              alert('Please enter valid coordinates');
-            }
-            e.stopPropagation();
-          });
-        
-          return zoomDiv;
-        };
-        map.addControl(zoomToCoordinatesControl);
 
         // Handle drawn layers
         map.on('draw:created', async (event) => {
@@ -217,7 +169,7 @@ const MapDraw = () => {
               fetchedFarmsCoordiantes.push(coordinates);
               sessionStorage.setItem('farms', JSON.stringify(fetchedFarmsCoordiantes));
               try {
-                const response = await fetch('http://localhost:3002/maprouter/registerfarm', {
+                const response = await fetch(`${serverHost}/maprouter/registerfarm`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
