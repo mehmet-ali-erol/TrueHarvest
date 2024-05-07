@@ -69,7 +69,7 @@ const FarmCard = ({ farm, flyToFarmLocation  }) => {
             <div className="col-12 col-md-8">
               <div className="row">
                 <p className="fw-bold m-0">{farm.farmname || 'Unnamed Farm'}</p>
-                <p className="fw-normal m-0">{farm.croptypes[0]|| 'Unsown'}</p>
+                <p className="fw-normal m-0">{farm.croptypes|| 'Unsown'}</p>
               </div>
             </div>
           </div>

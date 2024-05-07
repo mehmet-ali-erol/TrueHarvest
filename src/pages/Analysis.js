@@ -143,8 +143,6 @@ const Analysis = () => {
     }
   }
 
-
-
   const renderHeatmap = () => {
     if (isLoading) {
       return <Spin className="spin-prediction" size="large" />;
@@ -164,20 +162,31 @@ const Analysis = () => {
         </div>
       );
     }
+    console.log("RENDERHEATMAP")
+    console.log(farmCoordinates, predictionData.prediction_rate);
+    const indices = getRandomIndices(6, farmCoordinates.length);
+    const xLabels = indices.map(i => Number(farmCoordinates[i][0]).toFixed(4)).sort((a, b) => a - b); // lat values
+    const yLabels = indices.map(i => Number(farmCoordinates[i][1]).toFixed(4)).sort((a, b) => a - b); // lon values
+    // Flatten predictionData.prediction_rate and get 36 random elements
+    const flatData = predictionData.prediction_rate.flat();
+    const randomData = getRandomIndices(36, flatData.length).map(i => flatData[i]);
 
-
-    console.log("Selam")
+    // Reshape randomData into a 6x6 matrix
+    const data = [];
+    for (let i = 0; i < 6; i++) {
+      data.push(randomData.slice(i * 6, (i + 1) * 6));
+    }
     return (
       <div className="heatmap-container">
         <div className="heatmap-title">Latitude vs Longtitude Graph</div>
         <div className="heatmap-prediction">
           <HeatMap
-            xLabels={farmCoordinates.map(coord => Number(coord[0]).toFixed(4))} // lat values
-            yLabels={farmCoordinates.map(coord => Number(coord[1]).toFixed(4))} // lon values
-            data={predictionData.prediction_rate}
+            xLabels={xLabels} // lat values
+            yLabels={yLabels} // lon values
+            data={data}
             yLabelWidth={100} // Adjust label width to add space
             cellStyle={(background, value, min, max, data, x, y) => ({
-              background: `rgba(${255 * (1 - (value - min) / (max - min))}, ${200 + 55 * (value - min) / (max - min)}, 0, ${1 - (max - value) / (max - min)})`,
+              background: `rgba(${255 * (1 - (value - min) / (max - min))}, ${200 + 55 * (value - min) / (max - min)}, 0, 1)`,
               fontSize: "11px",
             })}
             cellRender={(value) => value && `${value.toFixed(2)}`}
@@ -187,6 +196,13 @@ const Analysis = () => {
     );
   }
 
+  function getRandomIndices(n, max) {
+    let indices = new Set();
+    while (indices.size < n) {
+      indices.add(Math.floor(Math.random() * max));
+    }
+    return Array.from(indices);
+  }
 
   const renderContent = () => {
     switch (view) {

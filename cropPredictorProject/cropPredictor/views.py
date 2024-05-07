@@ -66,7 +66,7 @@ async def export_and_predict(request):
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    blob = bucket.blob(source_blob_name)
+    blob = bucket.blob(source_blob_name) 
     # Check if the blob already exists to avoid re-exporting
     if blob.exists():
         print(f"Blob {source_blob_name} already exists. Skipping export.")

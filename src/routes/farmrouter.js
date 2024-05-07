@@ -6,6 +6,8 @@ const Farm = require('../models/Farm');
 const evalscript_ndvi_monthly = require('../evalscript/evalscript_ndvi_monthly.js');
 const bodyParser = require('body-parser');
 const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
+
 
 router.use(bodyParser.json());
 
@@ -37,6 +39,7 @@ router.get('/getfarmdetails', async (req, res) => {
   }
 });
 
+
 router.post('/savefarmname', async (req, res) => {
   try {
     const { selectedFarm, data } = req.body;
@@ -44,13 +47,13 @@ router.post('/savefarmname', async (req, res) => {
 
     const farm = await Farm.findOneAndUpdate(
       { '_id': objectId },
-      { $set: { 'farmname': data } },
+      { $set: { 'farmname': data } }
     );
-
-    res.json({ success: true, farm });
+    console.log(farm);
+    return res.status(200);
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ success: false, error: 'Internal Server Error' });
+    return res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
 
@@ -213,7 +216,6 @@ router.post('/deletecroptype', async (req, res) => {
 
 router.post('/statistics', async (req, res) => {
   const { sowingTime, harvestTime, coordinates } = req.body;
-  console.log(sowingTime, harvestTime, coordinates);
   const stats_request = {
     "input": {
       "bounds": {
@@ -284,7 +286,6 @@ router.post('/statistics', async (req, res) => {
 // Endpoint to save NDVI values
 router.post('/saveNdviValues', async (req, res) => {
   const { userEmail, selectedFarm, ndviData } = req.body;
-  console.log("SELAMMMMMM", userEmail, selectedFarm, ndviData)
   // Check if userEmail, selectedFarm, and ndviData are provided
   if (!userEmail || !selectedFarm || !ndviData) {
     return res.status(400).json({ error: 'Invalid request parameters' });
@@ -299,7 +300,6 @@ router.post('/saveNdviValues', async (req, res) => {
       { $set: ndviData },
       { new: true }
     );
-    console.log("SELAMMMMMM2222", updatedFarm)
     if (!updatedFarm) {
       return res.status(404).json({ error: 'Farm not found' });
     }

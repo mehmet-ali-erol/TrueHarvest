@@ -114,7 +114,7 @@ const Farm = () => {
   async function sendAnalysisAndSaveValues({ sowingTime, harvestTime, coordinates, userEmail, selectedFarm }) {
     // Call sendAnalysisRequest function
     const analysisResult = await sendNdviAnalysisRequest({ sowingTime, harvestTime, coordinates });
-
+    console.log(analysisResult);
     // Send analysisResult to /saveNdviValues endpoint
     const ndvi_response = await fetch('http://localhost:3002/farmrouter/saveNdviValues', {
       method: 'POST',
@@ -142,7 +142,6 @@ const Farm = () => {
       harvestTime,
       coordinates
     };
-
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -155,6 +154,7 @@ const Farm = () => {
       if (!response.ok) {
         throw new Error(`Request failed with status: ${response.status}`);
       }
+      console.log(response);
       const data = await response.json();
       return data;
     } catch (error) {
@@ -187,49 +187,75 @@ const Farm = () => {
   };
 
   const handleSaveFarmName = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName);
-
-    if (result && result.success) {
-    } else {
-      alert('Farm name update failed. Please try again.');
-    }
+    console.log(formData.fieldName);
+    sendRequest('http://localhost:3002/farmrouter/savefarmname', formData.fieldName)
+      .then(result => {
+        console.log(result);
+      })
+      .catch(error => {
+        console.error(error);
+        alert('Farm name update failed. Please try again.');
+      });
   };
 
   const handleSaveFarmAddress = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress);
-
-    if (result && result.success) {
-    } else {
-      alert('Farm address update failed. Please try again.');
-    }
+    sendRequest('http://localhost:3002/farmrouter/savefarmaddress', formData.fieldAddress)
+      .then(result => {
+        if (result && result.success) {
+          // handle success here
+        } else {
+          alert('Farm address update failed. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const handleAddCropType = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType);
-
-    if (result && result.success) {
-    } else {
-      alert('Crop type addition failed. Please try again.');
-    }
+    sendRequest('http://localhost:3002/farmrouter/addcroptype', formData.cropType)
+      .then(result => {
+        if (result && result.success) {
+          // handle success here
+        } else {
+          alert('Crop type addition failed. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        // handle error here
+      });
     setLoading(true);
   };
 
   const handleSaveSowTime = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime);
-
-    if (result && result.success) {
-    } else {
-      alert('Sow time update failed. Please try again.');
-    }
+    sendRequest('http://localhost:3002/farmrouter/savesowtime', formData.sowTime)
+      .then(result => {
+        if (result && result.success) {
+          // handle success here
+        } else {
+          alert('Sow time update failed. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        // handle error here
+      });
   };
 
   const handleSaveExpectedHarvestTime = async () => {
-    const result = await sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime', formData.expectedHarvestTime);
-
-    if (result && result.success) {
-    } else {
-      alert('Expected harvest time update failed. Please try again.');
-    }
+    sendRequest('http://localhost:3002/farmrouter/saveexpectedharvesttime', formData.expectedHarvestTime)
+      .then(result => {
+        if (result && result.success) {
+          // handle success here
+        } else {
+          alert('Expected harvest time update failed. Please try again.');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        // handle error here
+      });
   };
 
   const handleDeleteFarm = async () => {
@@ -300,22 +326,24 @@ const Farm = () => {
 
   const handleUpdateFieldInformation = async () => {
     try {
-      await handleSaveFarmName();
+      console.log(formData.sowTime, formData.expectedHarvestTime, coordinates, userEmail, selectedFarm);
+    /*   await handleSaveFarmName();
       await handleSaveFarmAddress();
       await handleSaveSowTime();
-      await handleSaveExpectedHarvestTime();
-      await handleAddCropType();
-      await handleDeleteCropType();
-
+      await handleSaveExpectedHarvestTime(); */
       sendAnalysisAndSaveValues
-        ({
-          sowingTime: formData.sowTime,
-          harvestTime: formData.expectedHarvestTime,
-          coordinates: coordinates,
-          userEmail: userEmail,
-          selectedFarm: selectedFarm
-        });
-
+      ({
+        sowingTime: formData.sowTime,
+        harvestTime: formData.expectedHarvestTime,
+        coordinates: coordinates,
+        userEmail: userEmail,
+        selectedFarm: selectedFarm
+      }).then(() => {
+        alert('Field information updated successfully');
+      })
+      .catch(error => {
+        console.error('Error:', error.message);
+      });
       alert('Field information updated successfully');
 
     } catch (error) {
