@@ -131,7 +131,7 @@ const Farm = () => {
     if (!ndvi_response.ok) {
       throw new Error(`Request failed with status: ${ndvi_response.status}`);
     }
-    console.log(analysisResult);
+    return ndvi_response;
   }
 
   async function sendNdviAnalysisRequest(data) {
@@ -327,10 +327,11 @@ const Farm = () => {
   const handleUpdateFieldInformation = async () => {
     try {
       console.log(formData.sowTime, formData.expectedHarvestTime, coordinates, userEmail, selectedFarm);
-    /*   await handleSaveFarmName();
+     
+      await handleSaveFarmName();
       await handleSaveFarmAddress();
       await handleSaveSowTime();
-      await handleSaveExpectedHarvestTime(); */
+      await handleSaveExpectedHarvestTime();
       sendAnalysisAndSaveValues
       ({
         sowingTime: formData.sowTime,
@@ -339,13 +340,13 @@ const Farm = () => {
         userEmail: userEmail,
         selectedFarm: selectedFarm
       }).then(() => {
-        alert('Field information updated successfully');
+
       })
       .catch(error => {
         console.error('Error:', error.message);
       });
+      console.log("ndvi_response");
       alert('Field information updated successfully');
-
     } catch (error) {
       console.error(error);
       alert('An error occurred while updating field information');
